@@ -2,6 +2,18 @@
 
     include 'jwt_helper.php';
 
+    class SmashdocsError extends Exception{}
+    class CreationFailed extends SmashdocsError{}
+    class UploadError extends SmashdocsError{}
+    class UnarchiveError extends SmashdocsError{}
+    class ArchiveError extends SmashdocsError{}
+    class DeletionError extends SmashdocsError{}
+    class CopyError extends SmashdocsError{}
+    class DocumentInfoError extends SmashdocsError{}
+    class UpdateMetadataError extends SmashdocsError{}
+    class OpenError extends SmashdocsError{}
+    class ExportError extends SmashdocsError{}
+
     class Smashdocs {
 
         function __construct($portal_url, $client_id, $client_key) {
@@ -36,6 +48,15 @@
             return $token;
         }
 
+        private function check_http_result($ch, $status_code_expected=200) {
+
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            if ($httpcode != $status_code_expected) {
+                $msg = 'HTTP call returned with status ' . $httpcode . ' (expected: ' . $status_code_expected . ')';
+                throw new SmashdocsError($msg);
+            }
+        }
+
         public function list_templates() {    
 
             $headers = array(
@@ -52,7 +73,7 @@
                 CURLOPT_VERBOSE     => 0
             ));
             $out = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $this->check_http_result($ch, 200);
             curl_close($ch);
             $result = (array) json_decode($out);
             return $result;        
@@ -78,7 +99,7 @@
                 )
             );
             $out = curl_exec ($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $this->check_http_result($ch);
             curl_close ($ch);
             $result = (array) json_decode($out);
             return $result;        
@@ -124,7 +145,7 @@
                 )
             );
             $out = curl_exec ($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $this->check_http_result($ch);
             curl_close ($ch);
             $result = (array) json_decode($out);
             return $result;        
@@ -151,7 +172,7 @@
                 )
             );
             $out = curl_exec ($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $this->check_http_result($ch);
             curl_close ($ch);
             $result = (array) json_decode($out);
             return $result;        
@@ -177,7 +198,7 @@
                 )
             );
             $out = curl_exec ($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $this->check_http_result($ch);
             curl_close ($ch);
             $result = (array) json_decode($out);
             return $result;        
@@ -222,7 +243,7 @@
                 )
             );
             $out = curl_exec ($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $this->check_http_result($ch, 200);
             curl_close ($ch);
             $result = (array) json_decode($out);
             return $result;        
