@@ -46,9 +46,9 @@
 
 
     $headers = array(
-        "x-client-id" => $client_id,
-        "content-type" => "application/json",
-        "authorization" => "Bearer " . $token,
+        "x-client-id: ". $client_id,
+        "content-type: ". "application/json",
+        "authorization: ". "Bearer " . $token,
     );
 
     echo print_r($headers) . "\n";
@@ -60,11 +60,13 @@
     curl_setopt_array($ch, array(
         CURLOPT_HTTPHEADER  => $headers,
         CURLOPT_RETURNTRANSFER  =>true,
-        CURLOPT_VERBOSE     => 1
+        CURLOPT_VERBOSE     => 0
     ));
     $out = curl_exec($ch);
     curl_close($ch);
     // echo response output
-    echo $out;
+
+    $result = json_decode($out);
     
+    echo print_r($result) . "\n";
 ?>
