@@ -57,6 +57,36 @@
         return $result;        
     }
 
+    function delete_document($documentId) {    
+
+        global $client_id, $partner_url;
+
+        $headers = array(
+            "x-client-id: ". $client_id,
+            "content-type: ". "application/json",
+            "authorization: ". "Bearer " . gen_token()
+        );
+
+
+        $data_string = json_encode($data);        
+        $url = $partner_url . "/partner/documents/" . $documentId;
+
+        $ch = curl_init();
+            curl_setopt_array($ch, array(
+            CURLOPT_URL => $url,
+            CURLOPT_CUSTOMREQUEST =>  "DELETE",
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_RETURNTRANSFER  => true,
+            CURLOPT_VERBOSE     => 0
+            )
+        );
+        $out = curl_exec ($ch);
+        curl_close ($ch);
+        $result = (array) json_decode($out);
+        return $result;        
+
+    }
+
     function open_document($documentId) {    
 
         global $client_id, $partner_url;
@@ -161,5 +191,7 @@
     print_r($result) . "\n";
     $url = $result['documentAccessLink'];
     echo $url . "\n";
+
+    $result = delete_document($documentId);
 
 ?>
