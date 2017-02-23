@@ -8,7 +8,7 @@
 
     class Smashdocs {
 
-        function uuid() 
+        private function uuid() 
         {
             $r = unpack('v*', fread(fopen('/dev/random', 'r'),16));
             $uuid = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
@@ -17,7 +17,7 @@
             return $uuid;
         }
 
-        function gen_token() {
+        private function gen_token() {
 
             global $client_key; 
 
