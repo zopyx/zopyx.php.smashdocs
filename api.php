@@ -2,11 +2,13 @@
 
     include 'jwt_helper.php';
 
-    $partner_url = $_SERVER['SMASHDOCS_PARTNER_URL'];
-    $client_id = $_SERVER['SMASHDOCS_CLIENT_ID'];
-    $client_key = $_SERVER['SMASHDOCS_CLIENT_KEY'];
-
     class Smashdocs {
+
+        function __construct($portal_url, $client_id, $client_key) {
+            $this->partner_url = $portal_url;
+            $this->client_id = $client_id;
+            $this->client_key =$client_key;
+        }
 
         private function uuid() 
         {
@@ -19,8 +21,6 @@
 
         private function gen_token() {
 
-            global $client_key; 
-
             $iss  = $this->uuid();
             $iat = time();
             $jti = $this->uuid();
@@ -32,21 +32,19 @@
             );
 
             $jwt = new JWT;
-            $token = $jwt->encode($jwt_payload, $client_key, "HS256");
+            $token = $jwt->encode($jwt_payload, $this->client_key, "HS256");
             return $token;
         }
 
         public function list_templates() {    
 
-            global $client_id, $partner_url;
-
             $headers = array(
-                "x-client-id: ". $client_id,
+                "x-client-id: ". $this->client_id,
                 "content-type: ". "application/json",
                 "authorization: ". "Bearer " . $this->gen_token()
             );
 
-            $url = $partner_url . "/partner/templates/word";
+            $url = $this->partner_url . "/partner/templates/word";
             $ch = curl_init($url);
             curl_setopt_array($ch, array(
                 CURLOPT_HTTPHEADER  => $headers,
@@ -62,17 +60,13 @@
 
         function delete_document($documentId) {    
 
-            global $client_id, $partner_url;
-
             $headers = array(
-                "x-client-id: ". $client_id,
+                "x-client-id: ". $this->client_id,
                 "content-type: ". "application/json",
                 "authorization: ". "Bearer " . $this->gen_token()
             );
 
-
-            $data_string = json_encode($data);        
-            $url = $partner_url . "/partner/documents/" . $documentId;
+            $url = $this->partner_url . "/partner/documents/" . $documentId;
 
             $ch = curl_init();
                 curl_setopt_array($ch, array(
@@ -93,10 +87,8 @@
 
         function open_document($documentId) {    
 
-            global $client_id, $partner_url;
-
             $headers = array(
-                "x-client-id: ". $client_id,
+                "x-client-id: ". $this->client_id,
                 "content-type: ". "application/json",
                 "authorization: ". "Bearer " . $this->gen_token()
             );
@@ -119,7 +111,7 @@
             );
 
             $data_string = json_encode($data);        
-            $url = $partner_url . "/partner/documents/" . $documentId;
+            $url = $this->partner_url . "/partner/documents/" . $documentId;
 
             $ch = curl_init();
                 curl_setopt_array($ch, array(
@@ -141,15 +133,13 @@
 
         function archive_document($documentId) {    
 
-            global $client_id, $partner_url;
-
             $headers = array(
-                "x-client-id: ". $client_id,
+                "x-client-id: ". $this->client_id,
                 "content-type: ". "application/json",
                 "authorization: ". "Bearer " . $this->gen_token()
             );
 
-            $url = $partner_url . "/partner/documents/" . $documentId . "/archive";
+            $url = $this->partner_url . "/partner/documents/" . $documentId . "/archive";
 
             $ch = curl_init();
                 curl_setopt_array($ch, array(
@@ -169,15 +159,13 @@
 
         function unarchive_document($documentId) {    
 
-            global $client_id, $partner_url;
-
             $headers = array(
-                "x-client-id: ". $client_id,
+                "x-client-id: ". $this->client_id,
                 "content-type: ". "application/json",
                 "authorization: ". "Bearer " . $this->gen_token()
             );
 
-            $url = $partner_url . "/partner/documents/" . $documentId . "/unarchive";
+            $url = $this->partner_url . "/partner/documents/" . $documentId . "/unarchive";
 
             $ch = curl_init();
                 curl_setopt_array($ch, array(
@@ -197,10 +185,8 @@
 
         function new_document() {
 
-            global $client_id, $partner_url;
-
             $headers = array(
-                "x-client-id: ". $client_id,
+                "x-client-id: ". $this->client_id,
                 "content-type: ". "application/json",
                 "authorization: ". "Bearer " . $this->gen_token()
             );
@@ -223,7 +209,7 @@
             );
 
             $data_string = json_encode($data);        
-            $url = $partner_url . "/partner/documents/create";
+            $url = $this->partner_url . "/partner/documents/create";
 
             $ch = curl_init();
                 curl_setopt_array($ch, array(
