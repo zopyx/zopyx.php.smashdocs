@@ -44,4 +44,27 @@
     $token = $jwt->encode($jwt_payload, $client_key, "HS256");
     echo $token . "\n";
 
+
+    $headers = array(
+        "x-client-id" => $client_id,
+        "content-type" => "application/json",
+        "authorization" => "Bearer " . $token,
+    );
+
+    echo print_r($headers) . "\n";
+
+    $url = $partner_url . "/partner/templates/word";
+    echo $url . "\n";
+
+    $ch = curl_init($url);
+    curl_setopt_array($ch, array(
+        CURLOPT_HTTPHEADER  => $headers,
+        CURLOPT_RETURNTRANSFER  =>true,
+        CURLOPT_VERBOSE     => 1
+    ));
+    $out = curl_exec($ch);
+    curl_close($ch);
+    // echo response output
+    echo $out;
+    
 ?>
