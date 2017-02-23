@@ -54,7 +54,11 @@
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             if ($httpcode != $status_code_expected) {
                 $msg = 'HTTP call returned with status ' . $httpcode . ' (expected: ' . $status_code_expected . ', ' . $out . ')';
-                throw new $exc_name($msg);
+                $exc = new $exc_name($msg);
+                $exc->status_code_got = $httpcode;
+                $exc->status_code_expected = $status_code_expected;
+                $exc->error_msg = $out;
+                throw $exc;
             }
             return $out;
         }
@@ -100,7 +104,7 @@
                 CURLOPT_VERBOSE     => 0
                 )
             );
-            $out = $this->check_http_result($ch);
+            $out = $this->check_http_result($ch, 200, 'DeletionError');
             curl_close ($ch);
             $result = (array) json_decode($out);
             return $result;        
@@ -145,7 +149,7 @@
                 CURLOPT_VERBOSE     => 0
                 )
             );
-            $out = $this->check_http_result($ch);
+            $out = $this->check_http_result($ch, 200, 'OpenError');
             curl_close ($ch);
             $result = (array) json_decode($out);
             return $result;        
@@ -171,7 +175,7 @@
                 CURLOPT_VERBOSE     => 0
                 )
             );
-            $out = $this->check_http_result($ch);
+            $out = $this->check_http_result($ch, 200, 'ArchiveError');
             curl_close ($ch);
             $result = (array) json_decode($out);
             return $result;        
@@ -196,7 +200,7 @@
                 CURLOPT_VERBOSE     => 0
                 )
             );
-            $out = $this->check_http_result($ch);
+            $out = $this->check_http_result($ch, 200, 'UnarchiveError');
             curl_close ($ch);
             $result = (array) json_decode($out);
             return $result;        
@@ -246,5 +250,4 @@
             return $result;        
         }
     }
-
 ?>

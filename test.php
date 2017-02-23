@@ -22,5 +22,6 @@
     $result = $sd -> archive_document($documentId);
     $result = $sd -> unarchive_document($documentId);
     $result = $sd -> delete_document($documentId);
+    $result = $sd -> delete_document($documentId);
 
 ?>
