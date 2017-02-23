@@ -95,6 +95,7 @@
             CURLOPT_POST => 1,
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_POSTFIELDS => $data_string,
+            CURLOPT_RETURNTRANSFER  =>true,
             CURLOPT_VERBOSE     => 0
             )
         );
