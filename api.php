@@ -48,14 +48,17 @@
             return $token;
         }
 
-        private function check_http_result($ch, $status_code_expected=200) {
+        private function check_http_result($ch, $status_code_expected=200, $exc_name='SmashdocsError') {
 
+            $out = curl_exec($ch);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             if ($httpcode != $status_code_expected) {
-                $msg = 'HTTP call returned with status ' . $httpcode . ' (expected: ' . $status_code_expected . ')';
-                throw new SmashdocsError($msg);
+                $msg = 'HTTP call returned with status ' . $httpcode . ' (expected: ' . $status_code_expected . ', ' . $out . ')';
+                throw new $exc_name($msg);
             }
+            return $out;
         }
+
 
         public function list_templates() {    
 
@@ -72,8 +75,7 @@
                 CURLOPT_RETURNTRANSFER  =>true,
                 CURLOPT_VERBOSE     => 0
             ));
-            $out = curl_exec($ch);
-            $this->check_http_result($ch, 200);
+            $out = $this->check_http_result($ch, 200);
             curl_close($ch);
             $result = (array) json_decode($out);
             return $result;        
@@ -98,8 +100,7 @@
                 CURLOPT_VERBOSE     => 0
                 )
             );
-            $out = curl_exec ($ch);
-            $this->check_http_result($ch);
+            $out = $this->check_http_result($ch);
             curl_close ($ch);
             $result = (array) json_decode($out);
             return $result;        
@@ -144,8 +145,7 @@
                 CURLOPT_VERBOSE     => 0
                 )
             );
-            $out = curl_exec ($ch);
-            $this->check_http_result($ch);
+            $out = $this->check_http_result($ch);
             curl_close ($ch);
             $result = (array) json_decode($out);
             return $result;        
@@ -171,8 +171,7 @@
                 CURLOPT_VERBOSE     => 0
                 )
             );
-            $out = curl_exec ($ch);
-            $this->check_http_result($ch);
+            $out = $this->check_http_result($ch);
             curl_close ($ch);
             $result = (array) json_decode($out);
             return $result;        
@@ -197,8 +196,7 @@
                 CURLOPT_VERBOSE     => 0
                 )
             );
-            $out = curl_exec ($ch);
-            $this->check_http_result($ch);
+            $out = $this->check_http_result($ch);
             curl_close ($ch);
             $result = (array) json_decode($out);
             return $result;        
@@ -242,8 +240,7 @@
                 CURLOPT_VERBOSE     => 0
                 )
             );
-            $out = curl_exec ($ch);
-            $this->check_http_result($ch, 200);
+            $out = $this->check_http_result($ch, 200, 'CreationFailed');
             curl_close ($ch);
             $result = (array) json_decode($out);
             return $result;        
