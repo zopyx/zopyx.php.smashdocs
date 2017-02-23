@@ -57,5 +57,53 @@
         return $result;        
     }
 
-    echo print_r(list_templates());
+
+    function new_document() {
+
+        global $client_id, $partner_url;
+
+        $headers = array(
+            "x-client-id: ". $client_id,
+            "content-type: ". "application/json",
+            "authorization: ". "Bearer " . gen_token()
+        );
+
+        $user_data = array(
+
+            "email" => "info@zopyx.com",
+            "firstname" => "Andreas",
+            "lastname" => "Jung",
+            "userId" => "ajung",
+            "company" => "ZOPYX"
+        );
+
+        $data = array(
+            "user" => $user_data,
+            "title" => "my title",
+            "description" => "my description",
+            "groupId" => "xxxx",
+            "userRole" => "editor",
+            "sectionHistory" => true
+        );
+
+        $data_string = json_encode($data);        
+        $url = $partner_url . "/partner/documents/create";
+
+        $ch = curl_init();
+            curl_setopt_array($ch, array(
+            CURLOPT_URL => $url,
+            CURLOPT_POST => 1,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_POSTFIELDS => $data_string,
+            CURLOPT_VERBOSE     => 0
+            )
+        );
+        $out = curl_exec ($ch);
+        curl_close ($ch);
+        $result = json_decode($out);
+        return $result;        
+    }
+
+    print_r(new_document()) . "\n";
+    print_r(list_templates()) . "\n";
 ?>
