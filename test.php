@@ -2,6 +2,10 @@
 
     include 'jwt_helper.php';
 
+    $partner_url = $_SERVER['SMASHDOCS_PARTNER_URL'];
+    $client_id = $_SERVER['SMASHDOCS_CLIENT_ID'];
+    $client_key = $_SERVER['SMASHDOCS_CLIENT_KEY'];
+
     function uuid() 
     {
         $r = unpack('v*', fread(fopen('/dev/random', 'r'),16));
@@ -11,62 +15,47 @@
         return $uuid;
     }
 
-    $partner_url = $_SERVER['SMASHDOCS_PARTNER_URL'];
-    $client_id = $_SERVER['SMASHDOCS_CLIENT_ID'];
-    $client_key = $_SERVER['SMASHDOCS_CLIENT_KEY'];
+    function gen_token() {
 
-    echo $partner_url . "\n";
-    echo $client_id . "\n";         
-    echo $client_key . "\n";
+        global $client_key; 
 
+        $iss  = uuid();
+        $iat = time();
+        $jti = uuid();
 
-    $iss  = uuid();
-    echo $iss . "\n";
+        $jwt_payload = array(
+            "iat" => $iat,
+            "iss" => $iss,
+            "jti" => $jti,
+        );
 
-    $iat = time();
-    echo $iat . "\n";
+        $jwt = new JWT;
+        $token = $jwt->encode($jwt_payload, $client_key, "HS256");
+        return $token;
+    }
 
+    function list_templates() {    
 
-    $jti = uuid();
-    echo $jti . "\n";
+        global $client_id, $partner_url;
 
-    $jwt_payload = array(
-        "iat" => $iat,
-        "iss" => $iss,
-        "jti" => $jti,
-    );
+        $headers = array(
+            "x-client-id: ". $client_id,
+            "content-type: ". "application/json",
+            "authorization: ". "Bearer " . gen_token()
+        );
 
-    echo print_r($jwt_payload) . "\n"; 
+        $url = $partner_url . "/partner/templates/word";
+        $ch = curl_init($url);
+        curl_setopt_array($ch, array(
+            CURLOPT_HTTPHEADER  => $headers,
+            CURLOPT_RETURNTRANSFER  =>true,
+            CURLOPT_VERBOSE     => 0
+        ));
+        $out = curl_exec($ch);
+        curl_close($ch);
+        $result = json_decode($out);
+        return $result;        
+    }
 
-    $jwt = new JWT;
-    echo print_r($jwt);
-
-    $token = $jwt->encode($jwt_payload, $client_key, "HS256");
-    echo $token . "\n";
-
-
-    $headers = array(
-        "x-client-id: ". $client_id,
-        "content-type: ". "application/json",
-        "authorization: ". "Bearer " . $token,
-    );
-
-    echo print_r($headers) . "\n";
-
-    $url = $partner_url . "/partner/templates/word";
-    echo $url . "\n";
-
-    $ch = curl_init($url);
-    curl_setopt_array($ch, array(
-        CURLOPT_HTTPHEADER  => $headers,
-        CURLOPT_RETURNTRANSFER  =>true,
-        CURLOPT_VERBOSE     => 0
-    ));
-    $out = curl_exec($ch);
-    curl_close($ch);
-    // echo response output
-
-    $result = json_decode($out);
-    
-    echo print_r($result) . "\n";
+    echo print_r(list_templates());
 ?>
