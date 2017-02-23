@@ -1,10 +1,10 @@
 <?php
-
+/*
 use PHPUnit\Framework\TestCase;
+*/
 
-/**
- * @covers Email
- */
+require_once 'PHPUnit/Autoload.php';
+
 final class SmashdocTests extends TestCase
 {
 
