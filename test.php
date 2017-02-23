@@ -134,6 +134,60 @@
 
     }
 
+    function archive_document($documentId) {    
+
+        global $client_id, $partner_url;
+
+        $headers = array(
+            "x-client-id: ". $client_id,
+            "content-type: ". "application/json",
+            "authorization: ". "Bearer " . gen_token()
+        );
+
+        $url = $partner_url . "/partner/documents/" . $documentId . "/archive";
+
+        $ch = curl_init();
+            curl_setopt_array($ch, array(
+            CURLOPT_URL => $url,
+            CURLOPT_POST => 1,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_RETURNTRANSFER  =>true,
+            CURLOPT_VERBOSE     => 0
+            )
+        );
+        $out = curl_exec ($ch);
+        curl_close ($ch);
+        $result = (array) json_decode($out);
+        return $result;        
+    }
+
+    function unarchive_document($documentId) {    
+
+        global $client_id, $partner_url;
+
+        $headers = array(
+            "x-client-id: ". $client_id,
+            "content-type: ". "application/json",
+            "authorization: ". "Bearer " . gen_token()
+        );
+
+        $url = $partner_url . "/partner/documents/" . $documentId . "/unarchive";
+
+        $ch = curl_init();
+            curl_setopt_array($ch, array(
+            CURLOPT_URL => $url,
+            CURLOPT_POST => 1,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_RETURNTRANSFER  =>true,
+            CURLOPT_VERBOSE     => 0
+            )
+        );
+        $out = curl_exec ($ch);
+        curl_close ($ch);
+        $result = (array) json_decode($out);
+        return $result;        
+    }
+
     function new_document() {
 
         global $client_id, $partner_url;
@@ -186,11 +240,15 @@
     print_r($result) . "\n";
     $documentId = $result['documentId'];
     echo $documentId . "\n";
+    
 
     $result = open_document($documentId);
     print_r($result) . "\n";
     $url = $result['documentAccessLink'];
     echo $url . "\n";
+
+    $result = archive_document($documentId);
+    $result = unarchive_document($documentId);
 
     $result = delete_document($documentId);
 
