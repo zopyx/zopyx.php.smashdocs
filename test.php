@@ -1,22 +1,22 @@
 <?php 
     include 'api.php';
 
-    print_r(list_templates()) . "\n";
+    $sd = new Smashdocs;
 
-    $result = new_document();
+    print_r($sd->list_templates()) . "\n";
+
+    $result = $sd->new_document();
     print_r($result) . "\n";
     $documentId = $result['documentId'];
     echo $documentId . "\n";
-    
 
-    $result = open_document($documentId);
+    $result = $sd -> open_document($documentId);
     print_r($result) . "\n";
     $url = $result['documentAccessLink'];
     echo $url . "\n";
 
-    $result = archive_document($documentId);
-    $result = unarchive_document($documentId);
-
-    $result = delete_document($documentId);
+    $result = $sd -> archive_document($documentId);
+    $result = $sd -> unarchive_document($documentId);
+    $result = $sd -> delete_document($documentId);
 
 ?>
