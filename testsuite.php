@@ -2,6 +2,17 @@
 
 use PHPUnit\Framework\TestCase;
 
+
+function endsWith($haystack, $needle)
+{
+    $length = strlen($needle);
+    if ($length == 0) {
+        return true;
+    }
+
+    return (substr($haystack, -$length) === $needle);
+}
+
 final class SmashdocTests extends TestCase
 {
 
@@ -23,12 +34,14 @@ final class SmashdocTests extends TestCase
     function testListTemplates()
     {
         $result = $this->sd->list_templates();
+        $this->assertEquals(0, 0);
     }
 
     function testCreateAndDeleteDocument()
     {
         $documentId = $this->_createDocument();
         $this->sd->delete_document($documentId);
+        $this->assertEquals(0, 0);
     }
 
     function testArchiveUnarchive()
@@ -37,6 +50,7 @@ final class SmashdocTests extends TestCase
         $this->sd->archive_document($documentId);
         $this->sd->unarchive_document($documentId);
         $this->sd->delete_document($documentId);
+        $this->assertEquals(0, 0);
     }
 
     function testCreateAndDeleteTwice()
@@ -46,6 +60,7 @@ final class SmashdocTests extends TestCase
         try {
             $this->sd->delete_document($documentId);
         } catch(DeletionError $e) { }
+        $this->assertEquals(0, 0);
     }
 
     function testOpenDocument()
@@ -54,17 +69,34 @@ final class SmashdocTests extends TestCase
         $result = $this->sd->open_document($documentId);
         $this->assertContains('https://', $result['documentAccessLink']); 
         $this->sd->delete_document($result['documentId']);
+        $this->assertEquals(0, 0);
     }
 
     function testExportDOCX() {
 
-        $templates = $sd->list_templates();
+        $templates = $this->sd->list_templates();
         $template_id = get_object_vars($templates[0])['id'];
 
-        $result = $sd->new_document();
-        $result = $sd->export_document($documentId, 'ajung', 'docx', $template_id);
-
-
+        $result = $this->sd->new_document();
+        $documentId = $result['documentId'];
+        $fn = $this->sd->export_document($documentId, 'ajung', 'docx', $template_id);
+        $this->assertEquals(true, endsWith($fn, '.docx'));
     }
-}
 
+    function testExportSDXML() {
+
+        $result = $this->sd->new_document();
+        $documentId = $result['documentId'];
+        $fn = $this->sd->export_document($documentId, 'ajung', 'sdxml');
+        $this->assertEquals(true, endsWith($fn, '.sdxml.zip'));
+    }
+
+    function testExportHTML() {
+
+        $result = $this->sd->new_document();
+        $documentId = $result['documentId'];
+        $fn = $this->sd->export_document($documentId, 'ajung', 'html');
+        $this->assertEquals(true, endsWith($fn, '.html.zip'));
+    }
+
+}

@@ -206,7 +206,7 @@
             return $result;        
         }
 
-        function export_document($documentId, $user_id, $template_id='', $format='docx') {
+        function export_document($documentId, $user_id, $format, $template_id='') {
 
             if (! in_array($format, array('docx', 'html', 'sdxml'))) {
                 throw new SmashdocsError('Unknown export format ' . $format);
@@ -229,10 +229,11 @@
             } elseif ($format == 'docx') {
                 $url = $this->partner_url . '/partner/documents/' . $documentId . '/export/word';
                 $data['templateId'] = $template_id;
-                $data['settings'] = array();
+                $data['settings'] = (object) array();
             } 
 
             $data_string = json_encode($data);        
+
             $ch = curl_init();
                 curl_setopt_array($ch, array(
                 CURLOPT_URL => $url,
@@ -250,7 +251,7 @@
             if ($format == 'docx') {
                 $fn = $fn . '.docx';
             } else {
-                $fn = $fn . '.' . '.' . $format;
+                $fn = $fn . '.' . $format . '.zip';
             }
 
             $fp = fopen($fn, "wb");
