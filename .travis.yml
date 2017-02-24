@@ -8,7 +8,7 @@ php:
 - 7.0
 before_script: 
     make install
-    composer require phpunit/phpunit
+    #    composer require phpunit/phpunit
 script: 
     vendor/bin/phpunit --bootstrap api.php testsuite.php
 env:
