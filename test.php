@@ -19,6 +19,8 @@
     $url = $result['documentAccessLink'];
     echo $url . "\n";
 
+    $result = $sd->export_document($documentId, $user_id, $template_id='', $format='docx');
+
     $result = $sd -> archive_document($documentId);
     $result = $sd -> unarchive_document($documentId);
     $result = $sd -> delete_document($documentId);

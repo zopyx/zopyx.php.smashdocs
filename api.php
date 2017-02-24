@@ -206,6 +206,59 @@
             return $result;        
         }
 
+        function export_document($documentId, $user_id, $template_id='', $format='docx') {
+
+            if (! in_array($format, array('docx', 'html', 'sdxml'))) {
+                throw new SmashdocsError('Unknown export format ' . $format);
+            }
+
+            $headers = array(
+                "x-client-id: ". $this->client_id,
+                "content-type: ". "application/json",
+                "authorization: ". "Bearer " . $this->gen_token()
+            );
+
+            $data = array(
+                "userId" => $user_id,
+            );
+
+            if ($format == 'sdxml') {
+                $url = $this->partner_url . '/partner/documents/' . $documentId . '/export/sdxml';
+            } elseif ($format == 'html') {
+                $url = $this->partner_url . '/partner/documents/' . $documentId . '/export/html';
+            } elseif ($format == 'docx') {
+                $url = $this->partner_url . '/partner/documents/' . $documentId . '/export/word';
+                $data['templateId'] = $template_id;
+                $data['settings'] = array();
+            } 
+
+            $data_string = json_encode($data);        
+            $ch = curl_init();
+                curl_setopt_array($ch, array(
+                CURLOPT_URL => $url,
+                CURLOPT_POST => 1,
+                CURLOPT_HTTPHEADER => $headers,
+                CURLOPT_POSTFIELDS => $data_string,
+                CURLOPT_RETURNTRANSFER  =>true,
+                CURLOPT_VERBOSE     => 0
+                )
+            );
+            $out = $this->check_http_result($ch, 200, 'ExportError');
+            curl_close ($ch);
+
+            $fn = tempnam(sys_get_temp_dir(), '');
+            if ($format == 'docx') {
+                $fn = $fn . '.docx';
+            } else {
+                $fn = $fn . '.' . '.' . $format;
+            }
+
+            $fp = fopen($fn, "wb");
+            fwrite($fp, $out);
+            fclose($fp);
+            return $fn;
+        }
+
         function new_document() {
 
             $headers = array(
