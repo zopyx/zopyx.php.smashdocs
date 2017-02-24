@@ -16,10 +16,11 @@
 
     class Smashdocs {
 
-        function __construct($portal_url, $client_id, $client_key) {
+        function __construct($portal_url, $client_id, $client_key, $verbose=0) {
             $this->partner_url = $portal_url;
             $this->client_id = $client_id;
             $this->client_key =$client_key;
+            $this->verbose = $verbose;
         }
 
         private function uuid() 
@@ -77,7 +78,7 @@
             curl_setopt_array($ch, array(
                 CURLOPT_HTTPHEADER  => $headers,
                 CURLOPT_RETURNTRANSFER  =>true,
-                CURLOPT_VERBOSE     => 0
+                CURLOPT_VERBOSE => $this->verbose
             ));
             $out = $this->check_http_result($ch, 200);
             curl_close($ch);
@@ -101,7 +102,7 @@
                 CURLOPT_CUSTOMREQUEST =>  "DELETE",
                 CURLOPT_HTTPHEADER => $headers,
                 CURLOPT_RETURNTRANSFER  => true,
-                CURLOPT_VERBOSE     => 0
+                CURLOPT_VERBOSE => $this->verbose
                 )
             );
             $out = $this->check_http_result($ch, 200, 'DeletionError');
@@ -146,7 +147,7 @@
                 CURLOPT_HTTPHEADER => $headers,
                 CURLOPT_POSTFIELDS => $data_string,
                 CURLOPT_RETURNTRANSFER  =>true,
-                CURLOPT_VERBOSE     => 0
+                CURLOPT_VERBOSE => $this->verbose
                 )
             );
             $out = $this->check_http_result($ch, 200, 'OpenError');
@@ -172,7 +173,7 @@
                 CURLOPT_POST => 1,
                 CURLOPT_HTTPHEADER => $headers,
                 CURLOPT_RETURNTRANSFER  =>true,
-                CURLOPT_VERBOSE     => 0
+                CURLOPT_VERBOSE => $this->verbose
                 )
             );
             $out = $this->check_http_result($ch, 200, 'ArchiveError');
@@ -197,7 +198,7 @@
                 CURLOPT_POST => 1,
                 CURLOPT_HTTPHEADER => $headers,
                 CURLOPT_RETURNTRANSFER  =>true,
-                CURLOPT_VERBOSE     => 0
+                CURLOPT_VERBOSE => $this->verbose
                 )
             );
             $out = $this->check_http_result($ch, 200, 'UnarchiveError');
@@ -241,7 +242,7 @@
                 CURLOPT_HTTPHEADER => $headers,
                 CURLOPT_POSTFIELDS => $data_string,
                 CURLOPT_RETURNTRANSFER  =>true,
-                CURLOPT_VERBOSE     => 0
+                CURLOPT_VERBOSE => $this->verbose
                 )
             );
             $out = $this->check_http_result($ch, 200, 'ExportError');
@@ -295,7 +296,7 @@
                 CURLOPT_HTTPHEADER => $headers,
                 CURLOPT_POSTFIELDS => $data_string,
                 CURLOPT_RETURNTRANSFER  =>true,
-                CURLOPT_VERBOSE     => 0
+                CURLOPT_VERBOSE => $this->verbose
                 )
             );
             $out = $this->check_http_result($ch, 200, 'CreationFailed');
