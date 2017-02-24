@@ -1,2 +1,2 @@
 test:
-	phpunit --bootstrap api.php testsuite.php
+	vendor/bin/phpunit --bootstrap api.php testsuite.php
