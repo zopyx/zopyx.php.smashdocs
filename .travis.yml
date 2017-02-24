@@ -6,8 +6,11 @@ php:
 - 5.6
 - 7.1
 - 7.0
-before_script: composer require phpunit/phpunit
-script: vendor/bin/phpunit --bootstrap api.php testsuite.php
+before_script: 
+    make install
+    composer require phpunit/phpunit
+script: 
+    vendor/bin/phpunit --bootstrap api.php testsuite.php
 env:
   global:
   - secure: j0POB0uBblYlgLkxgTdxbytcWNusROky19diVQmiqo9Jy5L/ehBgePF4PDs6WBIos+G7Q5xLC2u4H6N7F5MgcI0gUKB4GO76bCv8I0BkD4d1zzBo6lyX4BOGs9PzpSMJQ1/+4x1bzWMWLZYgMNj06kjr25MTIYGrcs8lkJ17jDN5IZtC1I+miD1kD0lHyDPycia0OGc+3WzVGS0y+bDUMzdDb1D1asmIMVWuE4zM1NtMbfoxj3Drltu55Ln7sNqri/9IvL4fl1GCpucSTXJiQ5WAqRLCVO3YRzwaUQC8BI0/iej8MQlm5M2bQVV5Xnz5ZTToNaRwDaGVGN7f1EABUpMBB1D2bFLRQeDB6DGrXCpLG1WWRcl3epAxlCyqqdxiXdM6qZmLbB9cLQvkUdKwy0Su0IUCYruPZ6yMqa+gHLBmpeac6kVDWga4TwPzSjoznmmei1kFD8EoxwG01h5nBTSHmeY1VcAQANcGFr+g2JYpkJYv1ToiWFnivSmOph6HHsFKBXt5tv/RIplP5hAUpZMLTfiEecZYoDHX3XkluLXSLQRpMqykttKmmT1K1g1E1ThY9jpL9wHnzXF6ScHefd8IX2R/rO3qTK6340Xi4Z8gUkH2iKr/Xg1uNUGq8kuSe0KiHR9WABRcK2GGwC6fonrLRbFR+/5WTJ+IFmlDXm8=
