@@ -56,5 +56,15 @@ final class SmashdocTests extends TestCase
         $this->sd->delete_document($result['documentId']);
     }
 
+    function testExportDOCX() {
+
+        $templates = $sd->list_templates();
+        $template_id = get_object_vars($templates[0])['id'];
+
+        $result = $sd->new_document();
+        $result = $sd->export_document($documentId, 'ajung', 'docx', $template_id);
+
+
+    }
 }
 
