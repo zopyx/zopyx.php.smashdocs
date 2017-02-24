@@ -7,7 +7,7 @@ before_script:
     composer require phpunit/phpunit
 
 script: 
-    phpunit --bootstrap api.php testsuite.php
+    vendor/bin/phpunit --bootstrap api.php testsuite.php
 
 env:
   global:
