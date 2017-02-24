@@ -3,6 +3,9 @@ dist: trusty
 python:
 - '5.6.'
 
+before_script: 
+    composer require phpunit/phpunit
+
 script: 
     phpunit --bootstrap api.php testsuite.php
 
