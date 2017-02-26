@@ -1,6 +1,7 @@
 <?php 
 
     include 'jwt_helper.php';
+    require_once './vendor/rmccue/requests/library/Requests.php';
 
     class SmashdocsError extends Exception{}
     class CreationFailed extends SmashdocsError{}
