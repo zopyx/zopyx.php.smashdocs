@@ -304,5 +304,54 @@
             $result = (array) json_decode($out);
             return $result;        
         }
+
+        function upload_document($fn) {
+
+            $headers = array(
+                "x-client-id: ". $this->client_id,
+                "authorization: ". "Bearer " . $this->gen_token()
+            );
+
+            $user_data = array(
+                "email" => "info@zopyx.com",
+                "firstname" => "Andreas",
+                "lastname" => "Jung",
+                "userId" => "ajung",
+                "company" => "ZOPYX"
+            );
+
+            $data = array(
+                "user" => $user_data,
+                "title" => "my title",
+                "description" => "my description",
+                "groupId" => "xxxx",
+                "userRole" => "editor",
+                "sectionHistory" => true
+            );
+
+
+
+            $url = $this->partner_url . "/partner/imports/word/upload";
+
+
+            $fp = fopen($fn, 'rb'); 
+            $ch = curl_init();
+                curl_setopt_array($ch, array(
+                CURLOPT_URL => $url,
+                CURLOPT_INFILE => $fp,
+                CURLOPT_INFILESIZE => filesize($fn),
+                CURLOPT_POST => 1,
+                CURLOPT_HTTPHEADER => $headers,
+                CURLOPT_POSTFIELDS => json_encode($data),
+                CURLOPT_RETURNTRANSFER  =>true,
+                CURLINFO_HEADER_OUT => true,
+                CURLOPT_VERBOSE => $this->verbose
+                )
+            );
+            $out = $this->check_http_result($ch, 200, 'CreationFailed');
+            curl_close ($ch);
+            $result = (array) json_decode($out);
+            return $result;        
+        }
     }
 ?>
