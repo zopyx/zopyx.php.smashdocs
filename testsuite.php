@@ -18,10 +18,10 @@ final class SmashdocTests extends TestCase
 
     function __construct() {
 
-        $this->partner_url = $_SERVER['SMASHDOCS_PARTNER_URL'];
-        $this->client_id = $_SERVER['SMASHDOCS_CLIENT_ID'];
-        $this->client_key = $_SERVER['SMASHDOCS_CLIENT_KEY'];
-        $verbose = 1;
+        $this->partner_url = getenv('SMASHDOCS_PARTNER_URL');
+        $this->client_id = getenv('SMASHDOCS_CLIENT_ID');
+        $this->client_key = getenv('SMASHDOCS_CLIENT_KEY');
+        $verbose = getenv('SMASHDOCS_DEBUG');
         $this->sd = new Smashdocs($this->partner_url, $this->client_id, $this->client_key, $verbose);
         parent::__construct();
     }
