@@ -329,10 +329,7 @@
                 "sectionHistory" => true
             );
 
-
-
             $url = $this->partner_url . "/partner/imports/word/upload";
-
 
             $fp = fopen($fn, 'rb'); 
             $ch = curl_init();
@@ -341,6 +338,7 @@
                 CURLOPT_INFILE => $fp,
                 CURLOPT_INFILESIZE => filesize($fn),
                 CURLOPT_POST => 1,
+                CURLOPT_UPLOAD => 1,
                 CURLOPT_HTTPHEADER => $headers,
                 CURLOPT_POSTFIELDS => json_encode($data),
                 CURLOPT_RETURNTRANSFER  =>true,
