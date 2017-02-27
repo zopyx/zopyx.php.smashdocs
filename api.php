@@ -300,10 +300,12 @@
 				'multipart' => [
 							[
 								'name'     => 'dummy',
-								'contents' => json_encode($data)
+                                'contents' => json_encode($data),
+                                'headers' =>  ['content-type' => 'application/json']
 							],
 							[
-								'name'     => 'name.docx',
+                                'name'     => 'name.docx',
+                                'Content-type' => 'multipart/form-data',
 								'contents' => $fp
 							]
 				]
