@@ -299,23 +299,19 @@
                 'headers' => $headers,
 				'multipart' => [
 							[
-								'name'     => 'dummy',
+								'name'     => 'data',
                                 'contents' => json_encode($data),
                                 'headers' =>  ['content-type' => 'application/json']
 							],
 							[
-                                'name'     => 'name.docx',
+                                'name'     => 'file',
                                 'Content-type' => 'multipart/form-data',
 								'contents' => $fp
 							]
 				]
             ]);
-            $fclose($fp);
 
-            $out = $this->check_http_result($ch, 200, 'CreationFailed');
-            curl_close ($ch);
-            $result = (array) json_decode($out);
-            return $result;        
+            return (array) $this->check_http_response($response, 200, 'UploadError', true);
         }
     }
 ?>
