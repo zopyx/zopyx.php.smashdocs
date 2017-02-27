@@ -236,7 +236,6 @@
                 "x-client-id" => $this->client_id,
                 "content-type" => "application/json",
                 "authorization" => "Bearer " . $this->gen_token(),
-                "accept" => "*/*"
             );
 
             $user_data = array(
@@ -297,13 +296,14 @@
             $fp = fopen($fn, 'rb'); 
             $response = $client->post($url, [
                 'debug' => $this->verbose,
+                'headers' => $headers,
 				'multipart' => [
 							[
-								'data'     => '',
+								'name'     => 'dummy',
 								'contents' => json_encode($data)
 							],
 							[
-								'file'     => 'name.docx',
+								'name'     => 'name.docx',
 								'contents' => $fp
 							]
 				]
