@@ -89,21 +89,17 @@
         public function list_templates() {    
 
             $headers = array(
-                "x-client-id: ". $this->client_id,
-                "content-type: ". "application/json",
-                "authorization: ". "Bearer " . $this->gen_token()
+                "x-client-id" => $this->client_id,
+                "content-type" => "application/json",
+                "authorization" => "Bearer " . $this->gen_token()
             );
             $url = $this->partner_url . "/partner/templates/word";
-            $ch = curl_init($url);
-            curl_setopt_array($ch, array(
-                CURLOPT_HTTPHEADER  => $headers,
-                CURLOPT_RETURNTRANSFER  =>true,
-                CURLOPT_VERBOSE => $this->verbose
-            ));
-            $out = $this->check_http_result($ch, 200);
-            curl_close($ch);
-            $result = (array) json_decode($out);
-            return $result;        
+            $client = new Client();
+            $response = $client->get($url, [
+                'debug' => $this->verbose,
+                'headers' => $headers
+            ]);
+            return  (array) $this->check_http_response($response, 200, 'OpenError', true);
         }
 
         function delete_document($documentId) {    
@@ -223,20 +219,14 @@
                 $data['settings'] = (object) array();
             } 
 
-            $data_string = json_encode($data);        
+            $client = new Client();
+            $response = $client->post($url, [
+                'debug' => $this->verbose,
+                'json' => $data,
+                'headers' => $headers
+            ]);
 
-            $ch = curl_init();
-                curl_setopt_array($ch, array(
-                CURLOPT_URL => $url,
-                CURLOPT_POST => 1,
-                CURLOPT_HTTPHEADER => $headers,
-                CURLOPT_POSTFIELDS => $data_string,
-                CURLOPT_RETURNTRANSFER  =>true,
-                CURLOPT_VERBOSE => $this->verbose
-                )
-            );
-            $out = $this->check_http_result($ch, 200, 'ExportError');
-            curl_close ($ch);
+            $out = $this->check_http_response($response, 200, 'ExportError', false);
 
             $fn = tempnam(sys_get_temp_dir(), '');
             if ($format == 'docx') {
