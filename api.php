@@ -200,9 +200,9 @@
             }
 
             $headers = array(
-                "x-client-id: ". $this->client_id,
-                "content-type: ". "application/json",
-                "authorization: ". "Bearer " . $this->gen_token()
+                "x-client-id" => $this->client_id,
+                "content-type" => "application/json",
+                "authorization" => "Bearer " . $this->gen_token()
             );
 
             $data = array(
