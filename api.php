@@ -97,10 +97,14 @@
 
             $url = $this->partner_url . "/partner/documents/" . $documentId;
             $client = new Client();
-            $response = $client->delete($url, [
-                'debug' => $this->verbose,
-                'headers' => $headers
-            ]);
+            try {
+                $response = $client->delete($url, [
+                    'debug' => $this->verbose,
+                    'headers' => $headers
+                ]);
+            } catch (Exception $e) {
+                throw new DeletionError($e->getMessage());
+            }
             return $this->check_http_response($response, 200, 'DeletionError', false);
         }
 
