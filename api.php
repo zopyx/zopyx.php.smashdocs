@@ -270,8 +270,8 @@
         function upload_document($fn) {
 
             $headers = array(
-                "x-client-id: ". $this->client_id,
-                "authorization: ". "Bearer " . $this->gen_token()
+                "x-client-id" => $this->client_id,
+                "authorization" => "Bearer " . $this->gen_token()
             );
 
             $user_data = array(
@@ -293,21 +293,23 @@
 
             $url = $this->partner_url . "/partner/imports/word/upload";
 
+            $client = new Client();
             $fp = fopen($fn, 'rb'); 
-            $ch = curl_init();
-                curl_setopt_array($ch, array(
-                CURLOPT_URL => $url,
-                CURLOPT_INFILE => $fp,
-                CURLOPT_INFILESIZE => filesize($fn),
-                CURLOPT_POST => 1,
-                CURLOPT_UPLOAD => 1,
-                CURLOPT_HTTPHEADER => $headers,
-                CURLOPT_POSTFIELDS => json_encode($data),
-                CURLOPT_RETURNTRANSFER  =>true,
-                CURLINFO_HEADER_OUT => true,
-                CURLOPT_VERBOSE => $this->verbose
-                )
-            );
+            $response = $client->post($url, [
+                'debug' => $this->verbose,
+				'multipart' => [
+							[
+								'data'     => '',
+								'contents' => json_encode($data)
+							],
+							[
+								'file'     => 'name.docx',
+								'contents' => $fp
+							]
+				]
+            ]);
+            $fclose($fp);
+
             $out = $this->check_http_result($ch, 200, 'CreationFailed');
             curl_close ($ch);
             $result = (array) json_decode($out);
