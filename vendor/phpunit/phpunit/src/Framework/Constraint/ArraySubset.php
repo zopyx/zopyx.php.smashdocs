@@ -7,16 +7,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PHPUnit\Framework\Constraint;
+
+use ArrayAccess;
 
 /**
  * Constraint that asserts that the array it is evaluated for has a specified subset.
  *
  * Uses array_replace_recursive() to check if a key value subset is part of the
  * subject array.
- *
- * @since Class available since Release 4.4.0
  */
-class PHPUnit_Framework_Constraint_ArraySubset extends PHPUnit_Framework_Constraint
+class ArraySubset extends Constraint
 {
     /**
      * @var array|ArrayAccess
@@ -49,13 +50,13 @@ class PHPUnit_Framework_Constraint_ArraySubset extends PHPUnit_Framework_Constra
      */
     protected function matches($other)
     {
-        //type cast $other & $this->subset as an array to allow 
+        //type cast $other & $this->subset as an array to allow
         //support in standard array functions.
-        if($other instanceof ArrayAccess) {
+        if ($other instanceof ArrayAccess) {
             $other = (array) $other;
         }
 
-        if($this->subset instanceof ArrayAccess) {
+        if ($this->subset instanceof ArrayAccess) {
             $this->subset = (array) $this->subset;
         }
 

@@ -1,4 +1,6 @@
 <?php
+use SebastianBergmann\CodeCoverage\CodeCoverage;
+
 if (!defined('STDOUT')) {
     // php://stdout does not obey output buffering. Any output would break
     // unserialization of child process results in the parent process.
@@ -28,11 +30,11 @@ function __phpunit_run_isolated_test()
         require_once '{filename}';
     }
 
-    $result = new PHPUnit_Framework_TestResult;
+    $result = new PHPUnit\Framework\TestResult;
 
     if ({collectCodeCoverageInformation}) {
         $result->setCodeCoverage(
-            new PHP_CodeCoverage(
+            new CodeCoverage(
                 null,
                 unserialize('{codeCoverageFilter}')
             )
@@ -41,8 +43,9 @@ function __phpunit_run_isolated_test()
 
     $result->beStrictAboutTestsThatDoNotTestAnything({isStrictAboutTestsThatDoNotTestAnything});
     $result->beStrictAboutOutputDuringTests({isStrictAboutOutputDuringTests});
-    $result->beStrictAboutTestSize({isStrictAboutTestSize});
+    $result->enforceTimeLimit({enforcesTimeLimit});
     $result->beStrictAboutTodoAnnotatedTests({isStrictAboutTodoAnnotatedTests});
+    $result->beStrictAboutResourceUsageDuringSmallTests({isStrictAboutResourceUsageDuringSmallTests});
 
     $test = new {className}('{methodName}', unserialize('{data}'), '{dataName}');
     $test->setDependencyInput(unserialize('{dependencyInput}'));
@@ -73,7 +76,7 @@ function __phpunit_run_isolated_test()
 $configurationFilePath = '{configurationFilePath}';
 
 if ('' !== $configurationFilePath) {
-    $configuration = PHPUnit_Util_Configuration::getInstance($configurationFilePath);
+    $configuration = PHPUnit\Util\Configuration::getInstance($configurationFilePath);
     $configuration->handlePHPConfiguration();
     unset($configuration);
 }

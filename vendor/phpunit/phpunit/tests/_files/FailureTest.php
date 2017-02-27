@@ -1,9 +1,11 @@
 <?php
-class FailureTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class FailureTest extends TestCase
 {
     public function testAssertArrayEqualsArray()
     {
-        $this->assertEquals(array(1), array(2), 'message');
+        $this->assertEquals([1], [2], 'message');
     }
 
     public function testAssertIntegerEqualsInteger()

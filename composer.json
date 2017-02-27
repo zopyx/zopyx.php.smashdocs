@@ -1,6 +1,6 @@
 {
     "require": {
         "phpunit/phpunit": "*",
-        "rmccue/requests": "*"
+        "guzzlehttp/guzzle": "~6.0"
     }
 }

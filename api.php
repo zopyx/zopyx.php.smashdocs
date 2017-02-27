@@ -1,7 +1,9 @@
 <?php 
 
     include 'jwt_helper.php';
-    require_once './vendor/rmccue/requests/library/Requests.php';
+    require 'vendor/autoload.php';
+
+    use GuzzleHttp\Client;
 
     class SmashdocsError extends Exception{}
     class CreationFailed extends SmashdocsError{}
@@ -65,6 +67,24 @@
             return $out;
         }
 
+        private function check_http_response($response, $status_code_expected=200, $exc_name='SmashdocsError', $decode_json=true) {
+
+            $httpcode = $response -> getStatusCode();
+            if ($httpcode != $status_code_expected) {
+                $msg = 'HTTP call returned with status ' . $httpcode . ' (expected: ' . $status_code_expected . ', ' . $out . ')';
+                $exc = new $exc_name($msg);
+                $exc->status_code_got = $httpcode;
+                $exc->status_code_expected = $status_code_expected;
+                $exc->error_msg = $out;
+                throw $exc;
+            }
+            if ($decode_json) {
+                return json_decode($response->getBody());
+            } else {
+                return $response->getBody();
+            }
+        }
+
 
         public function list_templates() {    
 
@@ -73,7 +93,6 @@
                 "content-type: ". "application/json",
                 "authorization: ". "Bearer " . $this->gen_token()
             );
-
             $url = $this->partner_url . "/partner/templates/word";
             $ch = curl_init($url);
             curl_setopt_array($ch, array(
@@ -90,35 +109,26 @@
         function delete_document($documentId) {    
 
             $headers = array(
-                "x-client-id: ". $this->client_id,
-                "content-type: ". "application/json",
-                "authorization: ". "Bearer " . $this->gen_token()
+                "x-client-id" => $this->client_id,
+                "content-type" => "application/json",
+                "authorization" => "Bearer " . $this->gen_token()
             );
 
             $url = $this->partner_url . "/partner/documents/" . $documentId;
-
-            $ch = curl_init();
-                curl_setopt_array($ch, array(
-                CURLOPT_URL => $url,
-                CURLOPT_CUSTOMREQUEST =>  "DELETE",
-                CURLOPT_HTTPHEADER => $headers,
-                CURLOPT_RETURNTRANSFER  => true,
-                CURLOPT_VERBOSE => $this->verbose
-                )
-            );
-            $out = $this->check_http_result($ch, 200, 'DeletionError');
-            curl_close ($ch);
-            $result = (array) json_decode($out);
-            return $result;        
+            $client = new Client();
+            $response = $client->delete($url, [
+                'debug' => $this->verbose,
+                'headers' => $headers
+            ]);
 
         }
 
         function open_document($documentId) {    
 
             $headers = array(
-                "x-client-id: ". $this->client_id,
-                "content-type: ". "application/json",
-                "authorization: ". "Bearer " . $this->gen_token()
+                "x-client-id" => $this->client_id,
+                "content-type" => "application/json",
+                "authorization" => "Bearer " . $this->gen_token()
             );
 
             $user_data = array(
@@ -138,74 +148,53 @@
                 "sectionHistory" => true
             );
 
-            $data_string = json_encode($data);        
             $url = $this->partner_url . "/partner/documents/" . $documentId;
+            $client = new Client();
+            $response = $client->post($url, [
+                'debug' => $this->verbose,
+                'json' => $data,
+                'headers' => $headers
+            ]);
 
-            $ch = curl_init();
-                curl_setopt_array($ch, array(
-                CURLOPT_URL => $url,
-                CURLOPT_POST => 1,
-                CURLOPT_HTTPHEADER => $headers,
-                CURLOPT_POSTFIELDS => $data_string,
-                CURLOPT_RETURNTRANSFER  =>true,
-                CURLOPT_VERBOSE => $this->verbose
-                )
-            );
-            $out = $this->check_http_result($ch, 200, 'OpenError');
-            curl_close ($ch);
-            $result = (array) json_decode($out);
-            return $result;        
-
+            return  (array) $this->check_http_response($response, 200, 'OpenError', true);
         }
 
         function archive_document($documentId) {    
 
             $headers = array(
-                "x-client-id: ". $this->client_id,
-                "content-type: ". "application/json",
-                "authorization: ". "Bearer " . $this->gen_token()
+                "x-client-id" => $this->client_id,
+                "content-type" => "application/json",
+                "authorization" => "Bearer " . $this->gen_token()
             );
 
             $url = $this->partner_url . "/partner/documents/" . $documentId . "/archive";
+            $client = new Client();
+            $response = $client->post($url, [
+                'debug' => $this->verbose,
+                'json' => $data,
+                'headers' => $headers
+            ]);
 
-            $ch = curl_init();
-                curl_setopt_array($ch, array(
-                CURLOPT_URL => $url,
-                CURLOPT_POST => 1,
-                CURLOPT_HTTPHEADER => $headers,
-                CURLOPT_RETURNTRANSFER  =>true,
-                CURLOPT_VERBOSE => $this->verbose
-                )
-            );
-            $out = $this->check_http_result($ch, 200, 'ArchiveError');
-            curl_close ($ch);
-            $result = (array) json_decode($out);
-            return $result;        
+            return  (array) $this->check_http_response($response, 200, 'ArchiveError', true);
         }
 
         function unarchive_document($documentId) {    
 
             $headers = array(
-                "x-client-id: ". $this->client_id,
-                "content-type: ". "application/json",
-                "authorization: ". "Bearer " . $this->gen_token()
+                "x-client-id" => $this->client_id,
+                "content-type" => "application/json",
+                "authorization" => "Bearer " . $this->gen_token()
             );
 
             $url = $this->partner_url . "/partner/documents/" . $documentId . "/unarchive";
+            $client = new Client();
+            $response = $client->post($url, [
+                'debug' => $this->verbose,
+                'json' => $data,
+                'headers' => $headers
+            ]);
 
-            $ch = curl_init();
-                curl_setopt_array($ch, array(
-                CURLOPT_URL => $url,
-                CURLOPT_POST => 1,
-                CURLOPT_HTTPHEADER => $headers,
-                CURLOPT_RETURNTRANSFER  =>true,
-                CURLOPT_VERBOSE => $this->verbose
-                )
-            );
-            $out = $this->check_http_result($ch, 200, 'UnarchiveError');
-            curl_close ($ch);
-            $result = (array) json_decode($out);
-            return $result;        
+            return  (array) $this->check_http_response($response, 200, 'UnarchiveError', true);
         }
 
         function export_document($documentId, $user_id, $format, $template_id='') {
@@ -265,9 +254,10 @@
         function new_document() {
 
             $headers = array(
-                "x-client-id: ". $this->client_id,
-                "content-type: ". "application/json",
-                "authorization: ". "Bearer " . $this->gen_token()
+                "x-client-id" => $this->client_id,
+                "content-type" => "application/json",
+                "authorization" => "Bearer " . $this->gen_token(),
+                "accept" => "*/*"
             );
 
             $user_data = array(
@@ -287,23 +277,15 @@
                 "sectionHistory" => true
             );
 
-            $data_string = json_encode($data);        
             $url = $this->partner_url . "/partner/documents/create";
+            $client = new Client();
+            $response = $client->post($url, [
+                'debug' => $this->verbose,
+                'json' => $data,
+                'headers' => $headers
+            ]);
 
-            $ch = curl_init();
-                curl_setopt_array($ch, array(
-                CURLOPT_URL => $url,
-                CURLOPT_POST => 1,
-                CURLOPT_HTTPHEADER => $headers,
-                CURLOPT_POSTFIELDS => $data_string,
-                CURLOPT_RETURNTRANSFER  =>true,
-                CURLOPT_VERBOSE => $this->verbose
-                )
-            );
-            $out = $this->check_http_result($ch, 200, 'CreationFailed');
-            curl_close ($ch);
-            $result = (array) json_decode($out);
-            return $result;        
+            return  (array) $this->check_http_response($response, 200, 'CreationFailed', true);
         }
 
         function upload_document($fn) {
