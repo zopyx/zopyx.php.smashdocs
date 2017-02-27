@@ -1,6 +1,6 @@
 {
     "require": {
-        "phpunit/phpunit": "*",
+        "phpunit/phpunit": "~4.8|~5.0",
         "guzzlehttp/guzzle": "~6.0"
     }
 }
