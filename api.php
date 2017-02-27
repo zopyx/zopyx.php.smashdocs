@@ -17,6 +17,13 @@
     class OpenError extends SmashdocsError{}
     class ExportError extends SmashdocsError{}
 
+ 	function endswith($string, $test) {
+		$strlen = strlen($string);
+		$testlen = strlen($test);
+		if ($testlen > $strlen) return false;
+		return substr_compare($string, $test, $strlen - $testlen, $testlen) === 0;
+	}
+
     class Smashdocs {
 
         function __construct($portal_url, $client_id, $client_key, $verbose=0) {
@@ -290,7 +297,11 @@
                 "sectionHistory" => true
             );
 
-            $url = $this->partner_url . "/partner/imports/word/upload";
+			if (endswith($fn, '.docx')) {
+	            $url = $this->partner_url . "/partner/imports/word/upload";
+			} else {
+	            $url = $this->partner_url . "/partner/imports/sdxml/upload";
+			}
 
             $client = new Client();
             $fp = fopen($fn, 'rb'); 
