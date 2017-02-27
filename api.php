@@ -52,21 +52,6 @@
             return $token;
         }
 
-        private function check_http_result($ch, $status_code_expected=200, $exc_name='SmashdocsError') {
-
-            $out = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            if ($httpcode != $status_code_expected) {
-                $msg = 'HTTP call returned with status ' . $httpcode . ' (expected: ' . $status_code_expected . ', ' . $out . ')';
-                $exc = new $exc_name($msg);
-                $exc->status_code_got = $httpcode;
-                $exc->status_code_expected = $status_code_expected;
-                $exc->error_msg = $out;
-                throw $exc;
-            }
-            return $out;
-        }
-
         private function check_http_response($response, $status_code_expected=200, $exc_name='SmashdocsError', $decode_json=true) {
 
             $httpcode = $response -> getStatusCode();
