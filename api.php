@@ -107,7 +107,7 @@
             $headers = array(
                 "x-client-id" => $this->client_id,
                 "content-type" => "application/json",
-                "authorization" => "Bearer " . $this->gen_token()
+                "authorization" => "Bearer " . $this->gen_token(),
             );
 
             $url = $this->partner_url . "/partner/documents/" . $documentId;
@@ -116,7 +116,7 @@
                 'debug' => $this->verbose,
                 'headers' => $headers
             ]);
-
+            return $this->check_http_response($response, 200, 'DeletionError', false);
         }
 
         function open_document($documentId) {    
