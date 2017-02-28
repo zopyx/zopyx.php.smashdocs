@@ -26,10 +26,11 @@
 
     class Smashdocs {
 
-        function __construct($portal_url, $client_id, $client_key, $verbose=0) {
+        function __construct($portal_url, $client_id, $client_key, $group_id='default', $verbose=0) {
             $this->partner_url = $portal_url;
             $this->client_id = $client_id;
-            $this->client_key =$client_key;
+            $this->client_key = $client_key;
+            $this->group_id = $group_id;
             $this->verbose = $verbose;
         }
 
@@ -65,6 +66,12 @@
                 "content-type" => "application/json",
                 "authorization" => "Bearer " . $this->gen_token(),
             );
+        }
+
+        private function check_role($role) {
+            if (! in_array($role, array('editor', 'reader', 'commentator', 'approver'))) {
+                throw new Exception('Unsupported role "' . $role . '"');
+            }
         }
 
         private function check_http_response($response, $status_code_expected=200, $exc_name='SmashdocsError', $decode_json=true) {
@@ -112,22 +119,14 @@
             return $this->check_http_response($response, 200, 'DeletionError', false);
         }
 
-        function open_document($documentId) {    
+        function open_document($documentId, $role='editor', array $user_data=null) {    
 
-            $user_data = array(
-                "email" => "info@zopyx.com",
-                "firstname" => "Andreas",
-                "lastname" => "Jung",
-                "userId" => "ajung",
-                "company" => "ZOPYX"
-            );
+            $this->check_role($role);
 
             $data = array(
                 "user" => $user_data,
-                "title" => "my title",
-                "description" => "my description",
-                "groupId" => "xxxx",
-                "userRole" => "editor",
+                "groupId" => $this->group_id,
+                "userRole" => $role,
                 "sectionHistory" => true
             );
 
@@ -210,22 +209,14 @@
             return $fn;
         }
 
-        function new_document() {
-
-            $user_data = array(
-                "email" => "info@zopyx.com",
-                "firstname" => "Andreas",
-                "lastname" => "Jung",
-                "userId" => "ajung",
-                "company" => "ZOPYX"
-            );
+        function new_document($title=null, $description=null, $role='editor', array $user_data=null) {
 
             $data = array(
                 "user" => $user_data,
-                "title" => "my title",
-                "description" => "my description",
-                "groupId" => "xxxx",
-                "userRole" => "editor",
+                "title" => $title,
+                "description" => $description,
+                "groupId" => $this->group_id,
+                "userRole" => $role,
                 "sectionHistory" => true
             );
 
@@ -240,27 +231,19 @@
             return  (array) $this->check_http_response($response, 200, 'CreationFailed', true);
         }
 
-        function upload_document($fn) {
+        function upload_document($fn, $title=null, $description=null, $role='editor', array $user_data=null) {
 
             $headers = array(
                 "x-client-id" => $this->client_id,
                 "authorization" => "Bearer " . $this->gen_token()
             );
 
-            $user_data = array(
-                "email" => "info@zopyx.com",
-                "firstname" => "Andreas",
-                "lastname" => "Jung",
-                "userId" => "ajung",
-                "company" => "ZOPYX"
-            );
-
             $data = array(
                 "user" => $user_data,
-                "title" => "my title",
-                "description" => "my description",
-                "groupId" => "xxxx",
-                "userRole" => "editor",
+                "title" => $title,
+                "description" => $description,
+                "groupId" => $this->group_id,
+                "userRole" => $role,
                 "sectionHistory" => true
             );
 
