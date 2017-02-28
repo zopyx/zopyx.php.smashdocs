@@ -13,7 +13,8 @@ function endsWith($haystack, $needle)
 }
 
 
-function make_user_data() {
+function make_user_data()
+{
     return array(
         "email" => "test@foo.com",
         "firstname" => "Henry",
@@ -26,7 +27,8 @@ function make_user_data() {
 final class SmashdocTests extends TestCase
 {
 
-    function __construct() {
+    function __construct()
+    {
 
         $this->partner_url = getenv('SMASHDOCS_PARTNER_URL');
         $this->client_id = getenv('SMASHDOCS_CLIENT_ID');
@@ -37,11 +39,13 @@ final class SmashdocTests extends TestCase
         parent::__construct();
     }
 
-    function _new_document() {
+    function _new_document()
+    {
         return $this->sd->new_document('my title', 'my description', 'editor', make_user_data());
     }
 
-    function _createDocument() {
+    function _createDocument()
+    {
         $result = $this->sd->new_document('my title', 'my description', 'editor', make_user_data());
         return $result['documentId'];
     }
@@ -74,7 +78,8 @@ final class SmashdocTests extends TestCase
         $this->sd->delete_document($documentId);
         try {
             $this->sd->delete_document($documentId);
-        } catch(DeletionError $e) { }
+        } catch (DeletionError $e) {
+        }
         $this->assertEquals(0, 0);
     }
 
@@ -82,7 +87,7 @@ final class SmashdocTests extends TestCase
     {
         $documentId = $this->_createDocument();
         $result = $this->sd->open_document($documentId, 'editor', make_user_data());
-        $this->assertContains('https://', $result['documentAccessLink']); 
+        $this->assertContains('https://', $result['documentAccessLink']);
         $this->sd->delete_document($result['documentId']);
         $this->assertEquals(0, 0);
     }
@@ -109,7 +114,8 @@ final class SmashdocTests extends TestCase
         $this->assertEquals($document_info["description"], "new description");
     }
 
-    function testExportDOCX() {
+    function testExportDOCX()
+    {
         $templates = $this->sd->list_templates();
         $template_id = get_object_vars($templates[0])['id'];
         $result = $this->_new_document();
@@ -118,28 +124,32 @@ final class SmashdocTests extends TestCase
         $this->assertEquals(true, endsWith($fn, '.docx'));
     }
 
-    function testExportSDXML() {
+    function testExportSDXML()
+    {
         $result = $this->_new_document();
         $documentId = $result['documentId'];
         $fn = $this->sd->export_document($documentId, 'ajung', 'sdxml');
         $this->assertEquals(true, endsWith($fn, '.sdxml.zip'));
     }
 
-    function testExportHTML() {
+    function testExportHTML()
+    {
         $result = $this->_new_document();
         $documentId = $result['documentId'];
         $fn = $this->sd->export_document($documentId, 'ajung', 'html');
         $this->assertEquals(true, endsWith($fn, '.html.zip'));
     }
 
-    function testUploadDOCX() {
+    function testUploadDOCX()
+    {
         $result = $this->sd->upload_document('test.docx', 'title', 'description', 'editor', make_user_data());
         $documentId = $result['documentId'];
         $this->sd->delete_document($result['documentId']);
         $this->assertEquals(0, 0);
     }
 
-    function testUploadSDXML() {
+    function testUploadSDXML()
+    {
         $result = $this->sd->upload_document('test_sdxml_large.zip', 'title', 'description', 'editor', make_user_data());
         $documentId = $result['documentId'];
         $this->sd->delete_document($result['documentId']);
