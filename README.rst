@@ -7,7 +7,7 @@ This module implements an PHP API wrapper for the Smashdocs Partner API.
 Requirements
 ------------
 
-* PHP 5+
+* PHP 7.X
 
 Smashdocs API version
 ---------------------
