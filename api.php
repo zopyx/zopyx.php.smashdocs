@@ -17,7 +17,7 @@
     class OpenError extends SmashdocsError{}
     class ExportError extends SmashdocsError{}
 
- 	function endswith($string, $test) {
+ 	function end_swith($string, $test) {
 		$strlen = strlen($string);
 		$testlen = strlen($test);
 		if ($testlen > $strlen) return false;
@@ -297,7 +297,7 @@
                 "sectionHistory" => true
             );
 
-			if (endswith($fn, '.docx')) {
+			if (ends_with($fn, '.docx')) {
 	            $url = $this->partner_url . "/partner/imports/word/upload";
 			} else {
 	            $url = $this->partner_url . "/partner/imports/sdxml/upload";
