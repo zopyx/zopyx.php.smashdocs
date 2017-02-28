@@ -87,6 +87,16 @@ final class SmashdocTests extends TestCase
         $this->assertEquals(0, 0);
     }
 
+    function testDuplicateDocument()
+    {
+        $documentId = $this->_createDocument();
+        $result = $this->sd->duplicate_document($documentId, 'my title', 'new description', 'testuser');
+        $this->sd->delete_document($documentId);
+        $this->sd->delete_document($result['documentId']);
+        $this->assertEquals(0, 0);
+    }
+
+
     function testExportDOCX() {
         $templates = $this->sd->list_templates();
         $template_id = get_object_vars($templates[0])['id'];

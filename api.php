@@ -231,6 +231,25 @@
             return  (array) $this->check_http_response($response, 200, 'CreationFailed', true);
         }
 
+        function duplicate_document($document_id, $title=null, $description=null, $creator_id=null) {
+
+            $data = array(
+                "description" => $description,
+                "title" => $title,
+                "creatorUserId" => $creator_id
+            );
+
+            $url = $this->partner_url . "/partner/documents/" . $document_id . "/duplicate";
+            $client = new Client();
+            $response = $client->post($url, [
+                'debug' => $this->verbose,
+                'json' => $data,
+                'headers' => $this->standard_headers()
+            ]);
+
+            return  (array) $this->check_http_response($response, 200, 'DuplicationFailed', true);
+        }
+
         function upload_document($fn, $title=null, $description=null, $role='editor', array $user_data=null) {
 
             $headers = array(
