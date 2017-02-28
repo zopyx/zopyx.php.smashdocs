@@ -17,7 +17,7 @@
     class OpenError extends SmashdocsError{}
     class ExportError extends SmashdocsError{}
 
- 	function end_swith($string, $test) {
+ 	function ends_with($string, $test) {
 		$strlen = strlen($string);
 		$testlen = strlen($test);
 		if ($testlen > $strlen) return false;
@@ -59,6 +59,14 @@
             return $token;
         }
 
+        private function standard_headers() {
+            return array(
+                "x-client-id" => $this->client_id,
+                "content-type" => "application/json",
+                "authorization" => "Bearer " . $this->gen_token(),
+            );
+        }
+
         private function check_http_response($response, $status_code_expected=200, $exc_name='SmashdocsError', $decode_json=true) {
 
             $httpcode = $response -> getStatusCode();
@@ -80,34 +88,23 @@
 
         public function list_templates() {    
 
-            $headers = array(
-                "x-client-id" => $this->client_id,
-                "content-type" => "application/json",
-                "authorization" => "Bearer " . $this->gen_token()
-            );
             $url = $this->partner_url . "/partner/templates/word";
             $client = new Client();
             $response = $client->get($url, [
                 'debug' => $this->verbose,
-                'headers' => $headers
+                'headers' => $this->standard_headers()
             ]);
             return  (array) $this->check_http_response($response, 200, 'OpenError', true);
         }
 
         function delete_document($documentId) {    
 
-            $headers = array(
-                "x-client-id" => $this->client_id,
-                "content-type" => "application/json",
-                "authorization" => "Bearer " . $this->gen_token(),
-            );
-
             $url = $this->partner_url . "/partner/documents/" . $documentId;
             $client = new Client();
             try {
                 $response = $client->delete($url, [
                     'debug' => $this->verbose,
-                    'headers' => $headers
+                    'headers' => $this->standard_headers()
                 ]);
             } catch (Exception $e) {
                 throw new DeletionError($e->getMessage());
@@ -116,12 +113,6 @@
         }
 
         function open_document($documentId) {    
-
-            $headers = array(
-                "x-client-id" => $this->client_id,
-                "content-type" => "application/json",
-                "authorization" => "Bearer " . $this->gen_token()
-            );
 
             $user_data = array(
                 "email" => "info@zopyx.com",
@@ -145,7 +136,7 @@
             $response = $client->post($url, [
                 'debug' => $this->verbose,
                 'json' => $data,
-                'headers' => $headers
+                'headers' => $this->standard_headers()
             ]);
 
             return  (array) $this->check_http_response($response, 200, 'OpenError', true);
@@ -153,18 +144,12 @@
 
         function archive_document($documentId) {    
 
-            $headers = array(
-                "x-client-id" => $this->client_id,
-                "content-type" => "application/json",
-                "authorization" => "Bearer " . $this->gen_token()
-            );
-
             $url = $this->partner_url . "/partner/documents/" . $documentId . "/archive";
             $client = new Client();
             $response = $client->post($url, [
                 'debug' => $this->verbose,
                 'json' => $data,
-                'headers' => $headers
+                'headers' => $this->standard_headers()
             ]);
 
             return  (array) $this->check_http_response($response, 200, 'ArchiveError', true);
@@ -172,18 +157,12 @@
 
         function unarchive_document($documentId) {    
 
-            $headers = array(
-                "x-client-id" => $this->client_id,
-                "content-type" => "application/json",
-                "authorization" => "Bearer " . $this->gen_token()
-            );
-
             $url = $this->partner_url . "/partner/documents/" . $documentId . "/unarchive";
             $client = new Client();
             $response = $client->post($url, [
                 'debug' => $this->verbose,
                 'json' => $data,
-                'headers' => $headers
+                'headers' => $this->standard_headers()
             ]);
 
             return  (array) $this->check_http_response($response, 200, 'UnarchiveError', true);
@@ -194,12 +173,6 @@
             if (! in_array($format, array('docx', 'html', 'sdxml'))) {
                 throw new SmashdocsError('Unknown export format ' . $format);
             }
-
-            $headers = array(
-                "x-client-id" => $this->client_id,
-                "content-type" => "application/json",
-                "authorization" => "Bearer " . $this->gen_token()
-            );
 
             $data = array(
                 "userId" => $user_id,
@@ -219,7 +192,7 @@
             $response = $client->post($url, [
                 'debug' => $this->verbose,
                 'json' => $data,
-                'headers' => $headers
+                'headers' => $this->standard_headers()
             ]);
 
             $out = $this->check_http_response($response, 200, 'ExportError', false);
@@ -238,12 +211,6 @@
         }
 
         function new_document() {
-
-            $headers = array(
-                "x-client-id" => $this->client_id,
-                "content-type" => "application/json",
-                "authorization" => "Bearer " . $this->gen_token(),
-            );
 
             $user_data = array(
                 "email" => "info@zopyx.com",
@@ -267,7 +234,7 @@
             $response = $client->post($url, [
                 'debug' => $this->verbose,
                 'json' => $data,
-                'headers' => $headers
+                'headers' => $this->standard_headers()
             ]);
 
             return  (array) $this->check_http_response($response, 200, 'CreationFailed', true);

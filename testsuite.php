@@ -74,10 +74,8 @@ final class SmashdocTests extends TestCase
     }
 
     function testExportDOCX() {
-
         $templates = $this->sd->list_templates();
         $template_id = get_object_vars($templates[0])['id'];
-
         $result = $this->sd->new_document();
         $documentId = $result['documentId'];
         $fn = $this->sd->export_document($documentId, 'ajung', 'docx', $template_id);
@@ -85,7 +83,6 @@ final class SmashdocTests extends TestCase
     }
 
     function testExportSDXML() {
-
         $result = $this->sd->new_document();
         $documentId = $result['documentId'];
         $fn = $this->sd->export_document($documentId, 'ajung', 'sdxml');
@@ -93,11 +90,23 @@ final class SmashdocTests extends TestCase
     }
 
     function testExportHTML() {
-
         $result = $this->sd->new_document();
         $documentId = $result['documentId'];
         $fn = $this->sd->export_document($documentId, 'ajung', 'html');
         $this->assertEquals(true, endsWith($fn, '.html.zip'));
     }
 
+    function testUploadDOCX() {
+        $result = $this->sd->upload_document('test.docx');
+        $documentId = $result['documentId'];
+        $this->sd->delete_document($result['documentId']);
+        $this->assertEquals(0, 0);
+    }
+
+    function testUploadSDXML() {
+        $result = $this->sd->upload_document('test_sdxml_large.zip');
+        $documentId = $result['documentId'];
+        $this->sd->delete_document($result['documentId']);
+        $this->assertEquals(0, 0);
+    }
 }
