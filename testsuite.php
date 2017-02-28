@@ -96,6 +96,18 @@ final class SmashdocTests extends TestCase
         $this->assertEquals(0, 0);
     }
 
+    function testUpdateMetadata()
+    {
+        $documentId = $this->_createDocument();
+        $metadata = array(
+            "title" => "new title",
+            "description" => "new description"
+        );
+        $this->sd->update_metadata($documentId, $metadata);
+        $document_info = $this->sd->document_info($documentId);
+        $this->assertEquals($document_info["title"], "new title");
+        $this->assertEquals($document_info["description"], "new description");
+    }
 
     function testExportDOCX() {
         $templates = $this->sd->list_templates();

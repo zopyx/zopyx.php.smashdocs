@@ -154,6 +154,29 @@ class SmashdocsError extends Exception{}
             return  (array) $this->check_http_response($response, 200, 'ArchiveError', true);
         }
 
+        function update_metadata($documentId, array $metadata=null) {    
+
+            $url = $this->partner_url . "/partner/documents/" . $documentId . "/metadata";
+            $client = new Client();
+            $response = $client->post($url, [
+                'debug' => $this->verbose,
+                'json' => $metadata,
+                'headers' => $this->standard_headers()
+            ]);
+        }
+
+        function document_info($documentId) {    
+
+            $url = $this->partner_url . "/partner/documents/" . $documentId;
+            $client = new Client();
+            $response = $client->get($url, [
+                'debug' => $this->verbose,
+                'headers' => $this->standard_headers()
+            ]);
+
+            return  (array) $this->check_http_response($response, 200, 'DocumentInfoError', true);
+        }
+
         function unarchive_document($documentId) {    
 
             $url = $this->partner_url . "/partner/documents/" . $documentId . "/unarchive";
