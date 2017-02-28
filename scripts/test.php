@@ -1,5 +1,6 @@
-<?php 
-    include 'api.php';
+<?php
+
+include 'api.php';
 
     $partner_url = $_SERVER['SMASHDOCS_PARTNER_URL'];
     $client_id = $_SERVER['SMASHDOCS_CLIENT_ID'];

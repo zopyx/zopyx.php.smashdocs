@@ -1,11 +1,11 @@
-<?php 
+<?php
 
-    include 'jwt_helper.php';
+include 'jwt_helper.php';
     require 'vendor/autoload.php';
 
-    use GuzzleHttp\Client;
+use GuzzleHttp\Client;
 
-    class SmashdocsError extends Exception{}
+class SmashdocsError extends Exception{}
     class CreationFailed extends SmashdocsError{}
     class UploadError extends SmashdocsError{}
     class UnarchiveError extends SmashdocsError{}
