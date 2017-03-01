@@ -2,6 +2,7 @@
     "require": {
         "phpunit/phpunit": "~4.8|~5.0",
         "guzzlehttp/guzzle": "~6.0",
-        "mmoreram/php-formatter": "dev-master"
+        "mmoreram/php-formatter": "dev-master",
+        "phpdocumentor/phpdocumentor": "2.9.0"
     }
 }

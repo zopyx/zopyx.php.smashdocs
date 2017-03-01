@@ -49,6 +49,11 @@ class ExportError extends SmashdocsError
 {
 }
 
+class GetDocumentsError extends SmashdocsError
+{
+}
+
+
 function ends_with($string, $test)
 {
     $strlen = strlen($string);
@@ -131,6 +136,23 @@ class Smashdocs
         }
     }
 
+    public function get_document($group_id=null, $user_id=null)
+    {
+
+        $data = array();
+        if ($group_id) 
+            $data["groupId"] = $group_id;
+        if ($user_id) 
+            $data["userId"] = $user_id;
+
+        $url = $this->partner_url . "/partner/documents/list";
+        $client = new Client();
+        $response = $client->get($url, [
+            'debug' => $this->verbose,
+            'headers' => $this->standard_headers()
+        ]);
+        return (array)$this->check_http_response($response, 200, 'GetDocumentsError', true);
+    }
 
     public function list_templates()
     {

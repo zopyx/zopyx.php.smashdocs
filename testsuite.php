@@ -140,6 +140,12 @@ final class SmashdocTests extends TestCase
         $this->assertEquals(true, endsWith($fn, '.html.zip'));
     }
 
+    function testGetDocuments() 
+    {
+        $result = $this->sd->upload_document('dummy_group', '');
+        $result = $this->sd->upload_document('', 'testuser');
+    }
+
     function testUploadDOCX()
     {
         $result = $this->sd->upload_document('test.docx', 'title', 'description', 'editor', make_user_data());
