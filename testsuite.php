@@ -142,8 +142,8 @@ final class SmashdocTests extends TestCase
 
     function testGetDocuments() 
     {
-        $result = $this->sd->upload_document('dummy_group', '');
-        $result = $this->sd->upload_document('', 'testuser');
+        $result = $this->sd->get_documents('dummy_group', '');
+        $result = $this->sd->get_documents('', 'testuser');
     }
 
     function testUploadDOCX()
