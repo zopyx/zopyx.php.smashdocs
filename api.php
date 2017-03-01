@@ -136,7 +136,7 @@ class Smashdocs
         }
     }
 
-    public function get_document($group_id=null, $user_id=null)
+    public function get_documents($group_id=null, $user_id=null)
     {
 
         $data = array();
