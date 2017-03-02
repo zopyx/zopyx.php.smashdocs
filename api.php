@@ -62,6 +62,55 @@ function ends_with($string, $test)
     return substr_compare($string, $test, $strlen - $testlen, $testlen) === 0;
 }
 
+
+function check_role($role)
+{
+    $allowed_sd_roles = array('editor', 'reader', 'approver', 'commentator');
+    
+    if (! in_array($role, $allowed_sd_roles)) {
+        throw new Exception('Unkown Smashdocs role: ' . $role);
+    }
+}
+
+
+function check_length($s, $max_len) {
+    if (strlen($s) > $max_len) {
+        throw new Exception('String too long');
+    }
+}
+
+function check_title($s) {
+    return check_length($s, 200);
+}
+
+function check_description($s) {
+    return check_length($s, 400);
+}
+
+function check_email($s) {
+    return check_length($s, 150);
+}
+
+function check_firstname($s) {
+    return check_length($s, 150);
+}
+
+function check_lastname($s) {
+    return check_length($s, 150);
+}
+
+function check_company($s) {
+    return check_length($s, 150);
+}
+
+function check_document_id($document_id) {
+
+}
+
+function check_user_data($ud) {
+
+}
+
 class Smashdocs
 {
 
@@ -108,13 +157,6 @@ class Smashdocs
             "content-type" => "application/json",
             "authorization" => "Bearer " . $this->gen_token(),
         );
-    }
-
-    private function check_role($role)
-    {
-        if (!in_array($role, array('editor', 'reader', 'commentator', 'approver'))) {
-            throw new Exception('Unsupported role "' . $role . '"');
-        }
     }
 
     private function check_http_response($response, $status_code_expected = 200, $exc_name = 'SmashdocsError', $decode_json = true)
@@ -169,6 +211,8 @@ class Smashdocs
     function delete_document($documentId)
     {
 
+        check_document_id($documentId);
+
         $url = $this->partner_url . "/partner/documents/" . $documentId;
         $client = new Client();
         try {
@@ -185,7 +229,9 @@ class Smashdocs
     function open_document($documentId, $role = 'editor', array $user_data = null)
     {
 
-        $this->check_role($role);
+        check_role($role);
+        check_document_id($documentId);
+        check_user_data($user_data);
 
         $data = array(
             "user" => $user_data,
@@ -221,6 +267,7 @@ class Smashdocs
 
     function update_metadata($documentId, array $metadata = null)
     {
+        check_document_id($documentId);
 
         $url = $this->partner_url . "/partner/documents/" . $documentId . "/metadata";
         $client = new Client();
@@ -233,6 +280,7 @@ class Smashdocs
 
     function document_info($documentId)
     {
+        check_document_id($documentId);
 
         $url = $this->partner_url . "/partner/documents/" . $documentId;
         $client = new Client();
@@ -246,6 +294,7 @@ class Smashdocs
 
     function unarchive_document($documentId)
     {
+        check_document_id($documentId);
 
         $url = $this->partner_url . "/partner/documents/" . $documentId . "/unarchive";
         $client = new Client();
@@ -260,6 +309,7 @@ class Smashdocs
 
     function export_document($documentId, $user_id, $format, $template_id = '')
     {
+        check_document_id($documentId);
 
         if (!in_array($format, array('docx', 'html', 'sdxml'))) {
             throw new SmashdocsError('Unknown export format ' . $format);
@@ -303,6 +353,10 @@ class Smashdocs
 
     function new_document($title = null, $description = null, $role = 'editor', array $user_data = null)
     {
+        check_title($title);
+        check_description($title);
+        check_role($role);
+        check_user_data($user_data);
 
         $data = array(
             "user" => $user_data,
@@ -326,6 +380,8 @@ class Smashdocs
 
     function duplicate_document($document_id, $title = null, $description = null, $creator_id = null)
     {
+        check_title($title);
+        check_description($title);
 
         $data = array(
             "description" => $description,
@@ -346,6 +402,10 @@ class Smashdocs
 
     function upload_document($fn, $title = null, $description = null, $role = 'editor', array $user_data = null)
     {
+        check_title($title);
+        check_description($title);
+        check_role($role);
+        check_user_data($user_data);
 
         $headers = array(
             "x-client-id" => $this->client_id,
