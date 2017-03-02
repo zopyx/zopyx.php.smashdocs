@@ -66,48 +66,57 @@ function ends_with($string, $test)
 function check_role($role)
 {
     $allowed_sd_roles = array('editor', 'reader', 'approver', 'commentator');
-    
-    if (! in_array($role, $allowed_sd_roles)) {
+
+    if (!in_array($role, $allowed_sd_roles)) {
         throw new Exception('Unkown Smashdocs role: ' . $role);
     }
 }
 
 
-function check_length($s, $max_len) {
+function check_length($s, $max_len)
+{
     if (strlen($s) > $max_len) {
         throw new Exception('String too long');
     }
 }
 
-function check_title($s) {
+function check_title($s)
+{
     return check_length($s, 200);
 }
 
-function check_description($s) {
+function check_description($s)
+{
     return check_length($s, 400);
 }
 
-function check_email($s) {
+function check_email($s)
+{
     return check_length($s, 150);
 }
 
-function check_firstname($s) {
+function check_firstname($s)
+{
     return check_length($s, 150);
 }
 
-function check_lastname($s) {
+function check_lastname($s)
+{
     return check_length($s, 150);
 }
 
-function check_company($s) {
+function check_company($s)
+{
     return check_length($s, 150);
 }
 
-function check_document_id($document_id) {
+function check_document_id($document_id)
+{
 
 }
 
-function check_user_data($ud) {
+function check_user_data($ud)
+{
 
 }
 
@@ -178,13 +187,13 @@ class Smashdocs
         }
     }
 
-    public function get_documents($group_id=null, $user_id=null)
+    public function get_documents($group_id = null, $user_id = null)
     {
 
         $data = array();
-        if ($group_id) 
+        if ($group_id)
             $data["groupId"] = $group_id;
-        if ($user_id) 
+        if ($user_id)
             $data["userId"] = $user_id;
 
         $url = $this->partner_url . "/partner/documents/list";
