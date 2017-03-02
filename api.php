@@ -90,8 +90,10 @@ function check_description($s)
     return check_length($s, 400);
 }
 
+/* Check Email */
 function check_email($s)
 {
+    /* Check Email */
     return check_length($s, 150);
 }
 
@@ -198,10 +200,7 @@ class Smashdocs
 
         $url = $this->partner_url . "/partner/documents/list";
         $client = new Client();
-        $response = $client->get($url, [
-            'debug' => $this->verbose,
-            'headers' => $this->standard_headers()
-        ]);
+        $response = $client->get($url, array('debug' => $this->verbose, 'headers' => $this->standard_headers()));
         return (array)$this->check_http_response($response, 200, 'GetDocumentsError', true);
     }
 
@@ -210,10 +209,10 @@ class Smashdocs
 
         $url = $this->partner_url . "/partner/templates/word";
         $client = new Client();
-        $response = $client->get($url, [
+        $response = $client->get($url, array(
             'debug' => $this->verbose,
             'headers' => $this->standard_headers()
-        ]);
+        ));
         return (array)$this->check_http_response($response, 200, 'OpenError', true);
     }
 
@@ -225,10 +224,10 @@ class Smashdocs
         $url = $this->partner_url . "/partner/documents/" . $documentId;
         $client = new Client();
         try {
-            $response = $client->delete($url, [
+            $response = $client->delete($url, array(
                 'debug' => $this->verbose,
                 'headers' => $this->standard_headers()
-            ]);
+            ));
         } catch (Exception $e) {
             throw new DeletionError($e->getMessage());
         }
@@ -251,11 +250,11 @@ class Smashdocs
 
         $url = $this->partner_url . "/partner/documents/" . $documentId;
         $client = new Client();
-        $response = $client->post($url, [
+        $response = $client->post($url, array(
             'debug' => $this->verbose,
             'json' => $data,
             'headers' => $this->standard_headers()
-        ]);
+        ));
 
         return (array)$this->check_http_response($response, 200, 'OpenError', true);
     }
@@ -265,11 +264,11 @@ class Smashdocs
 
         $url = $this->partner_url . "/partner/documents/" . $documentId . "/archive";
         $client = new Client();
-        $response = $client->post($url, [
+        $response = $client->post($url,  array(
             'debug' => $this->verbose,
             'json' => $data,
             'headers' => $this->standard_headers()
-        ]);
+        ));
 
         return (array)$this->check_http_response($response, 200, 'ArchiveError', true);
     }
@@ -280,11 +279,11 @@ class Smashdocs
 
         $url = $this->partner_url . "/partner/documents/" . $documentId . "/metadata";
         $client = new Client();
-        $response = $client->post($url, [
+        $response = $client->post($url, array(
             'debug' => $this->verbose,
             'json' => $metadata,
             'headers' => $this->standard_headers()
-        ]);
+        ));
     }
 
     function document_info($documentId)
@@ -293,10 +292,10 @@ class Smashdocs
 
         $url = $this->partner_url . "/partner/documents/" . $documentId;
         $client = new Client();
-        $response = $client->get($url, [
+        $response = $client->get($url, array(
             'debug' => $this->verbose,
             'headers' => $this->standard_headers()
-        ]);
+        ));
 
         return (array)$this->check_http_response($response, 200, 'DocumentInfoError', true);
     }
@@ -307,11 +306,11 @@ class Smashdocs
 
         $url = $this->partner_url . "/partner/documents/" . $documentId . "/unarchive";
         $client = new Client();
-        $response = $client->post($url, [
+        $response = $client->post($url, array(
             'debug' => $this->verbose,
             'json' => $data,
             'headers' => $this->standard_headers()
-        ]);
+        ));
 
         return (array)$this->check_http_response($response, 200, 'UnarchiveError', true);
     }
@@ -339,11 +338,11 @@ class Smashdocs
         }
 
         $client = new Client();
-        $response = $client->post($url, [
+        $response = $client->post($url,  array(
             'debug' => $this->verbose,
             'json' => $data,
             'headers' => $this->standard_headers()
-        ]);
+        ));
 
         $out = $this->check_http_response($response, 200, 'ExportError', false);
 
@@ -378,11 +377,11 @@ class Smashdocs
 
         $url = $this->partner_url . "/partner/documents/create";
         $client = new Client();
-        $response = $client->post($url, [
+        $response = $client->post($url, array(
             'debug' => $this->verbose,
             'json' => $data,
             'headers' => $this->standard_headers()
-        ]);
+        ));
 
         return (array)$this->check_http_response($response, 200, 'CreationFailed', true);
     }
@@ -400,21 +399,17 @@ class Smashdocs
 
         $url = $this->partner_url . "/partner/documents/" . $document_id . "/duplicate";
         $client = new Client();
-        $response = $client->post($url, [
+        $response = $client->post($url, array(
             'debug' => $this->verbose,
             'json' => $data,
             'headers' => $this->standard_headers()
-        ]);
+        ));
 
         return (array)$this->check_http_response($response, 200, 'DuplicationFailed', true);
     }
 
     function upload_document($fn, $title = null, $description = null, $role = 'editor', array $user_data = null)
     {
-        check_title($title);
-        check_description($title);
-        check_role($role);
-        check_user_data($user_data);
 
         $headers = array(
             "x-client-id" => $this->client_id,
@@ -438,22 +433,22 @@ class Smashdocs
 
         $client = new Client();
         $fp = fopen($fn, 'rb');
-        $response = $client->post($url, [
+        $response = $client->post($url, array(
             'debug' => $this->verbose,
             'headers' => $headers,
-            'multipart' => [
-                [
+            'multipart' => array(
+                array(
                     'name' => 'data',
                     'contents' => json_encode($data),
-                    'headers' => ['content-type' => 'application/json']
-                ],
-                [
+                    'headers' => array('content-type' => 'application/json')
+                ),
+                array(
                     'name' => 'file',
                     'Content-type' => 'multipart/form-data',
                     'contents' => $fp
-                ]
-            ]
-        ]);
+                )
+            )
+        ));
 
         return (array)$this->check_http_response($response, 200, 'UploadError', true);
     }
