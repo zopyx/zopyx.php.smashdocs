@@ -1,4 +1,18 @@
 {
+    "name": "zopyx/smashdocs",
+    "type": "library",
+    "description": "SMASHDOCs partner API wrapper for PHP 7+",
+    "keywords": ["smashdocs","collaboration", "editor"],
+    "homepage": "https://github.com/zopyx/zopyx.php.smashdocs",
+    "license": "GPL2",
+    "authors": [
+        {
+            "name": "Andreas Jung",
+            "email": "info@zopyx.com",
+            "homepage": "https://www.andreas-jung.com",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "phpunit/phpunit": "~4.8|~5.0",
         "guzzlehttp/guzzle": "~6.0"
