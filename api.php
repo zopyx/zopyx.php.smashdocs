@@ -1,10 +1,10 @@
 <?php
 
-include 'jwt_helper.php';
 require 'vendor/autoload.php';
 
 use GuzzleHttp\Client;
 use Ramsey\Uuid\Uuid;
+use \Firebase\JWT\JWT;
 
 class SmashdocsError extends Exception
 {
