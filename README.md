@@ -42,12 +42,11 @@ Testing
 `zopyx.php.smashdocs` has been tested against PHP 7.0 and 7.1 (no support for PHP 5.X)
 In order to run the test you need the following environment variables set.
 
-.. code::
-
-    export SMASHDOCS_PARTNER_URL=http://...
-    export SMASHDOCS_CLIENT_ID=<your client id>
-    export SMASHDOCS_CLIENT_KEY=<your client key>
-
+```python
+export SMASHDOCS_PARTNER_URL=http://...
+export SMASHDOCS_CLIENT_ID=<your client id>
+export SMASHDOCS_CLIENT_KEY=<your client key>
+```
 
 License
 -------

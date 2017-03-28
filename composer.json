@@ -1,6 +1,7 @@
 {
     "name": "zopyx/smashdocs",
     "type": "library",
+    "version": "0.2",
     "description": "SMASHDOCs partner API wrapper for PHP 7+",
     "keywords": ["smashdocs","collaboration", "editor"],
     "homepage": "https://github.com/zopyx/zopyx.php.smashdocs",
