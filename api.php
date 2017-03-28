@@ -166,6 +166,7 @@ class Smashdocs
 
     private function check_http_response($response, $status_code_expected = 200, $exc_name = 'SmashdocsError', $decode_json = true)
     {
+        global $API_MIN_VERSION;
 
         $httpcode = $response->getStatusCode();
         if ($httpcode != $status_code_expected) {
@@ -178,9 +179,9 @@ class Smashdocs
         }
 
         $api_version = $response->getHeaders()['X-Api-Version'][0];
-        if (version_compare($api_version, $API_MIN_VERSION) < 0) {
-            $msg = "Partner API version too old: " . $api_version;
-            throw SmashdocsError($msg);
+        if (version_compare($api_version, $API_MIN_VERSION, '<')) {
+            $msg = "Partner API version too old: " . $api_version . ", expected minimal: " . $API_MIN_VERSION;
+            throw new SmashdocsError($msg);
         }
 
         if ($decode_json) {
