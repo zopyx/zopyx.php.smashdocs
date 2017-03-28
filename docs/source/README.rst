@@ -1,18 +1,22 @@
-zopyx.php.smashdocs
-===================
+zopyx.smashdocs
+===============
 
-This module implements an PHP API wrapper for the Smashdocs Partner API.
-
+Python wrapper for the Smashdocs Partner API.
 
 Requirements
 ------------
 
-* PHP 7.X
+* Python 2.6
+* Python 2.7
+* Python 3.3
+* Python 3.4
+* Python 3.5
+* Python 3.6
 
 Smashdocs API version
 ---------------------
 
-The current version of ``zopyx.php.smashdocs`` has been tested against
+The current version of ``zopyx.smashdocs`` has been tested against
 https://documentation.smashdocs.net/release_notes.html#version-1-5-0-0-18-11-2016
 
 API documentation
@@ -23,36 +27,36 @@ See http://smashdocs.readthedocs.io/en/latest/
 Repository
 ----------
 
-* https://github.com/zopyx/zopyx.php.smashdocs
+* https://github.com/zopyx/zopyx.smashdocs
 
 Issue tracker
 -------------
 
-* https://github.com/zopyx/zopyx.php.smashdocs/issues
+* https://github.com/zopyx/zopyx.smashdocs/issues
 
 Continous integration
 ---------------------
 
-* https://travis-ci.org/zopyx/zopyx.php.smashdocs
+* https://travis-ci.org/zopyx/zopyx.smashdocs
 
 
 Testing
 -------
 
-`zopyx.php.smashdocs` has been tested against PHP 7.0 and 7.1 (no support for PHP 5.X)
-In order to run the test you need the following environment variables set.
+`zopyx.smashdocs` has been tested against the latest Python 2 and Python 3 versions.
+In order to run the test suite yourself you need to run:
 
 .. code::
 
     export SMASHDOCS_PARTNER_URL=http://...
     export SMASHDOCS_CLIENT_ID=<your client id>
     export SMASHDOCS_CLIENT_KEY=<your client key>
-
+    bin/pytest zopyx/smashdocs
 
 License
 -------
 
-``zopyx.php.smashdocs`` is published under the GNU Public License GPL Version 2 (GPL 2).
+``zopyx.smashdocs`` is published under the GNU Public License GPL Version 2 (GPL 2).
 
 
 Author
