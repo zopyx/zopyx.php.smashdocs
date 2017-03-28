@@ -5,6 +5,8 @@ require 'vendor/autoload.php';
 
 use GuzzleHttp\Client;
 
+$API_MIN_VERSION = "1.5.5.0";
+
 class SmashdocsError extends Exception
 {
 }
@@ -129,6 +131,13 @@ class Smashdocs
             $exc->error_msg = $out;
             throw $exc;
         }
+
+        $api_version = $response->getHeaders()['X-Api-Version'][0];
+        if (version_compare($api_version, $API_MIN_VERSION) < 0) {
+            $msg = "Partner API version too old: " . $api_version;
+            throw SmashdocsError($msg);
+        }
+
         if ($decode_json) {
             return json_decode($response->getBody());
         } else {
