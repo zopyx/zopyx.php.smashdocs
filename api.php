@@ -178,8 +178,9 @@ class Smashdocs
             throw $exc;
         }
 
-        $api_version = $response->getHeaders()['X-Api-Version'][0];
-        if (strlen($api_version) > 0 ) {
+        $api_version = $response->getHeader('X-Api-Version');
+        if (count($api_version) > 0 ) {
+            $api_version = $api_version[0];
             if (version_compare($api_version, $API_MIN_VERSION, '<')) {
                 $msg = "Partner API version too old: " . $api_version . ", expected minimal: " . $API_MIN_VERSION;
                 throw new SmashdocsError($msg);
