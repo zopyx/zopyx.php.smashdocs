@@ -39,15 +39,15 @@ final class SmashdocTests extends TestCase
         parent::__construct();
     }
 
-    function _new_document()
+    function _createDocument($empty=true)
     {
-        return $this->sd->new_document('my title', 'my description', 'editor', make_user_data());
-    }
-
-    function _createDocument()
-    {
-        $result = $this->sd->new_document('my title', 'my description', 'editor', make_user_data());
-        return $result['documentId'];
+        if ($empty) {
+            $result = $this->sd->new_document('my title', 'my description', 'editor', make_user_data());
+            return $result['documentId'];
+        } else {
+            $result = $this->sd->upload_document('test.docx', 'title', 'description', 'editor', make_user_data());
+            return $result['documentId'];
+        }
     }
 
     function testListTemplates()
@@ -94,7 +94,7 @@ final class SmashdocTests extends TestCase
 
     function testDuplicateDocument()
     {
-        $documentId = $this->_createDocument();
+        $documentId = $this->_createDocument(false);
         $result = $this->sd->duplicate_document($documentId, 'my title', 'new description', 'testuser');
         $this->sd->delete_document($documentId);
         $this->sd->delete_document($result['documentId']);
@@ -118,32 +118,28 @@ final class SmashdocTests extends TestCase
     {
         $templates = $this->sd->list_templates();
         $template_id = get_object_vars($templates[0])['id'];
-        $result = $this->_new_document();
-        $documentId = $result['documentId'];
+        $documentId = $this->_createDocument();
         $fn = $this->sd->export_document($documentId, 'ajung', 'docx', $template_id);
         $this->assertEquals(true, endsWith($fn, '.docx'));
     }
 
     function testExportSDXML()
     {
-        $result = $this->_new_document();
-        $documentId = $result['documentId'];
+        $documentId = $this->_createDocument();
         $fn = $this->sd->export_document($documentId, 'ajung', 'sdxml');
         $this->assertEquals(true, endsWith($fn, '.sdxml.zip'));
     }
 
     function testExportHTML()
     {
-        $result = $this->_new_document();
-        $documentId = $result['documentId'];
+        $documentId = $this->_createDocument();
         $fn = $this->sd->export_document($documentId, 'ajung', 'html');
         $this->assertEquals(true, endsWith($fn, '.html.zip'));
     }
 
     function testReviewDocoument()
     {
-        $result = $this->_new_document();
-        $documentId = $result['documentId'];
+        $documentId = $this->_createDocument(false);
         $this->sd->review_document($documentId);
     }
 
