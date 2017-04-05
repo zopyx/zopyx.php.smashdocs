@@ -24,7 +24,12 @@ class UnarchiveError extends SmashdocsError
 {
 }
 
+
 class ArchiveError extends SmashdocsError
+{
+}
+
+class ReviewError extends SmashdocsError
 {
 }
 
@@ -271,11 +276,23 @@ class Smashdocs
         $client = new Client();
         $response = $client->post($url,  array(
             'debug' => $this->verbose,
-            'json' => $data,
             'headers' => $this->standard_headers()
         ));
 
         return (array)$this->check_http_response($response, 200, 'ArchiveError', true);
+    }
+
+    function review_document($documentId)
+    {
+
+        $url = $this->partner_url . "/partner/documents/" . $documentId . "/review";
+        $client = new Client();
+        $response = $client->post($url,  array(
+            'debug' => $this->verbose,
+            'headers' => $this->standard_headers()
+        ));
+
+        return (array)$this->check_http_response($response, 200, 'ReviewError', true);
     }
 
     function update_metadata($documentId, array $metadata = null)
@@ -313,7 +330,6 @@ class Smashdocs
         $client = new Client();
         $response = $client->post($url, array(
             'debug' => $this->verbose,
-            'json' => $data,
             'headers' => $this->standard_headers()
         ));
 

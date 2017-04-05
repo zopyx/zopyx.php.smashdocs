@@ -140,6 +140,13 @@ final class SmashdocTests extends TestCase
         $this->assertEquals(true, endsWith($fn, '.html.zip'));
     }
 
+    function testReviewDocoument()
+    {
+        $result = $this->_new_document();
+        $documentId = $result['documentId'];
+        $this->sd->review_document($documentId);
+    }
+
     function testGetDocuments() 
     {
         $result = $this->sd->get_documents('dummy_group', '');
