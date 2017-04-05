@@ -336,7 +336,7 @@ class Smashdocs
         return (array)$this->check_http_response($response, 200, 'UnarchiveError', true);
     }
 
-    function export_document($documentId, $user_id, $format, $template_id = '')
+    function export_document($documentId, $user_id, $format, $template_id = '', $settings=null)
     {
         check_document_id($documentId);
 
@@ -355,7 +355,11 @@ class Smashdocs
         } elseif ($format == 'docx') {
             $url = $this->partner_url . '/partner/documents/' . $documentId . '/export/word';
             $data['templateId'] = $template_id;
-            $data['settings'] = (object)array();
+            if ($settings != null) { 
+                $data['settings'] = $settings;
+            } else {
+                $data['settings'] = (object)array();
+            }
         }
 
         $client = new Client();
