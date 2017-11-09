@@ -352,6 +352,7 @@ class Smashdocs
             $url = $this->partner_url . '/partner/documents/' . $documentId . '/export/sdxml';
         } elseif ($format == 'html') {
             $url = $this->partner_url . '/partner/documents/' . $documentId . '/export/html';
+            $data['mode'] = 'final';
         } elseif ($format == 'docx') {
             $url = $this->partner_url . '/partner/documents/' . $documentId . '/export/word';
             $data['templateId'] = $template_id;

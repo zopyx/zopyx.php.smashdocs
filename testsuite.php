@@ -119,21 +119,21 @@ final class SmashdocTests extends TestCase
         $templates = $this->sd->list_templates();
         $template_id = get_object_vars($templates[0])['id'];
         $documentId = $this->_createDocument();
-        $fn = $this->sd->export_document($documentId, 'ajung', 'docx', $template_id);
+        $fn = $this->sd->export_document($documentId, 'testuser', 'docx', $template_id);
         $this->assertEquals(true, endsWith($fn, '.docx'));
     }
 
     function testExportSDXML()
     {
         $documentId = $this->_createDocument();
-        $fn = $this->sd->export_document($documentId, 'ajung', 'sdxml');
+        $fn = $this->sd->export_document($documentId, 'testuser', 'sdxml');
         $this->assertEquals(true, endsWith($fn, '.sdxml.zip'));
     }
 
     function testExportHTML()
     {
         $documentId = $this->_createDocument();
-        $fn = $this->sd->export_document($documentId, 'ajung', 'html');
+        $fn = $this->sd->export_document($documentId, 'testuser', 'html');
         $this->assertEquals(true, endsWith($fn, '.html.zip'));
     }
 
