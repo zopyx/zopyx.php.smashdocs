@@ -1,9 +1,9 @@
 language: php
 sudo: false
 php:
+- 7.3
 - 7.2
 - 7.1
-- 7.0
 before_script: 
     make install
     #    composer require phpunit/phpunit
