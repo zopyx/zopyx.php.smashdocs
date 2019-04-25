@@ -142,10 +142,14 @@ class Smashdocs
         $this->verbose = $verbose;
     }
 
-    private function gen_token()
+    private function gen_token($user_id=null)
     {
-
-        $iss = Uuid::uuid4();
+        if ($user_id != null) {
+            $iss = $user_id;
+        } else {
+            $iss = Uuid::uuid4();
+        }
+        $iss = $user_id;
         $iat = time();
         $jti = Uuid::uuid4();
 
@@ -160,12 +164,12 @@ class Smashdocs
         return $token;
     }
 
-    private function standard_headers()
+    private function standard_headers($user_id=null)
     {
         return array(
             "x-client-id" => $this->client_id,
             "content-type" => "application/json",
-            "authorization" => "Bearer " . $this->gen_token(),
+            "authorization" => "Bearer " . $this->gen_token($user_id),
         );
     }
 
@@ -367,7 +371,7 @@ class Smashdocs
         $response = $client->post($url,  array(
             'debug' => $this->verbose,
             'json' => $data,
-            'headers' => $this->standard_headers()
+            'headers' => $this->standard_headers($user_id)
         ));
 
         $out = $this->check_http_response($response, 200, 'ExportError', false);
