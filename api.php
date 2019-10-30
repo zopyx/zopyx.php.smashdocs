@@ -149,7 +149,6 @@ class Smashdocs
         } else {
             $iss = Uuid::uuid4();
         }
-        $iss = $user_id;
         $iat = time();
         $jti = Uuid::uuid4();
 
