@@ -17,6 +17,10 @@ jobs:
       run: composer install --prefer-dist --no-progress --no-suggest
 
     - name: Testrunner
+      env:
+        SMASHDOCS_CLIENT_ID:   ${{ secrets.SMASHDOCS_CLIENT_ID }}
+        SMASHDOCS_CLIENT_KEY:  ${{ secrets.SMASHDOCS_CLIENT_KEY }}
+        SMASHDOCS_PARTNER_URL: ${{ secrets.SMASHDOCS_PARTNER_URL }}
       run: vendor/bin/phpunit --bootstrap api.php testsuite.php
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
